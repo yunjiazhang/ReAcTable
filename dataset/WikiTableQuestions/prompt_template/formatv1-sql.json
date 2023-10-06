@@ -1,0 +1,7 @@
+{
+    "prompt_template": "The database table DF is shown as follows:\n{}\n\nGiven the above database table DF, answer the question by executing a series of SQL queries step-by-step. At each step, choose from generating a SQL query, or directly answering the question. The generated SQL query should have valid SQL syntax and match the data format of the table DF above. Question: \"{}\".",
+    "intermediate_prompt_template":{
+        "SQL": "The database table DF after executing the SQL query is shown as follows:\n{}\n\nContinue to answer the question above: \"{}\". Choose from generating a valid SQL query, or directly answering the question.",
+        "Python": null
+    }
+}

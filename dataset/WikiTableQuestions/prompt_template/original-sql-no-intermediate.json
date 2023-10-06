@@ -1,0 +1,7 @@
+{
+    "prompt_template": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". Generate SQL code step-by-step given the question and table to answer the question correctly. For each step, generate SQL code to process the query on the data. Output the code braced by \"```\" and an external executor will process the code generated and feed an intermediate table back to you. Answer the question directly if confident.",
+    "intermediate_prompt_template": {
+        "SQL": "Intermediate table:\n{}",
+        "Python": "Intermediate table:\n{}"
+    }
+}

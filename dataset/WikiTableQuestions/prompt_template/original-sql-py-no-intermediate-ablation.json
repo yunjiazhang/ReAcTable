@@ -1,0 +1,7 @@
+{
+    "prompt_template": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". ",
+    "intermediate_prompt_template": {
+        "SQL": "Intermediate table:\n{}",
+        "Python": "Intermediate table:\n{}"
+    }
+}

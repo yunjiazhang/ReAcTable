@@ -1,0 +1,96 @@
+A database table is shown as follows:
+[HEAD]: Year|Division|League|Regular Season|Playoffs|Open Cup|Avg. Attendance
+-----------------------------------------------------------------------------
+[ROW] 1: 2001|2|USL A-League|4th, Western|Quarterfinals|Did not qualify|7,169
+[ROW] 2: 2002|2|USL A-League|2nd, Pacific|1st Round|Did not qualify|6,260
+[ROW] 3: 2003|2|USL A-League|3rd, Pacific|Did not qualify|Did not qualify|5,871
+[ROW] 4: 2004|2|USL A-League|1st, Western|Quarterfinals|4th Round|5,628
+[ROW] 5: 2005|2|USL First Division|5th|Quarterfinals|4th Round|6,028
+[ROW] 6: 2006|2|USL First Division|11th|Did not qualify|3rd Round|5,575
+[ROW] 7: 2007|2|USL First Division|2nd|Semifinals|2nd Round|6,851
+[ROW] 8: 2008|2|USL First Division|11th|Did not qualify|1st Round|8,567
+[ROW] 9: 2009|2|USL First Division|1st|Semifinals|3rd Round|9,734
+[ROW] 10: 2010|2|USSF D-2 Pro League|3rd, USL (3rd)|Quarterfinals|3rd Round|10,727
+
+Answer the following question based on the data above: "what was the last year where this team was a part of the usl a-league?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+This table appears to show the devision of a team in each year.
+The team was "USL A-League" in "2001", "2002", "2003", and "2004".
+The lasy year was "2004".
+Therefore, the answer is:```2004```.
+
+
+A database table is shown as follows:
+[HEAD]: Year|Competition|Venue|Position|Event|Notes
+---------------------------------------------------
+[ROW] 1: 2001|World Youth Championships|Debrecen, Hungary|2nd|400 m|47.12
+[ROW] 2: 2001|World Youth Championships|Debrecen, Hungary|1st|Medley relay|1:50.46
+[ROW] 3: 2001|European Junior Championships|Grosseto, Italy|1st|4x400 m relay|3:06.12
+[ROW] 4: 2003|European Junior Championships|Tampere, Finland|3rd|400 m|46.69
+[ROW] 5: 2003|European Junior Championships|Tampere, Finland|2nd|4x400 m relay|3:08.62
+[ROW] 6: 2005|European U23 Championships|Erfurt, Germany|11th (sf)|400 m|46.62
+[ROW] 7: 2005|European U23 Championships|Erfurt, Germany|1st|4x400 m relay|3:04.41
+[ROW] 8: 2005|Universiade|Izmir, Turkey|7th|400 m|46.89
+[ROW] 9: 2005|Universiade|Izmir, Turkey|1st|4x400 m relay|3:02.57
+[ROW] 10: 2006|World Indoor Championships|Moscow, Russia|2nd (h)|4x400 m relay|3:06.10
+[ROW] 11: 2006|European Championships|Gothenburg, Sweden|3rd|4x400 m relay|3:01.73
+[ROW] 12: 2007|European Indoor Championships|Birmingham, United Kingdom|3rd|4x400 m relay|3:08.14
+[ROW] 13: 2007|Universiade|Bangkok, Thailand|7th|400 m|46.85
+[ROW] 14: 2007|Universiade|Bangkok, Thailand|1st|4x400 m relay|3:02.05
+[ROW] 15: 2008|World Indoor Championships|Valencia, Spain|4th|4x400 m relay|3:08.76
+[ROW] 16: 2008|Olympic Games|Beijing, China|7th|4x400 m relay|3:00.32
+[ROW] 17: 2009|Universiade|Belgrade, Serbia|2nd|4x400 m relay|3:05.69
+
+Answer the following question based on the data above: "in what city did piotr's last 1st place finish occur?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+The tables shows the competition ranking of Piotr.
+Piotr won 1st place in "Debrecen, Hungary" ("2001"), "Grosseto, Italy" ("2001"), "Izmir, Turkey" ("2005"), and "Bangkok, Thailand" ("2007").
+The last 1st place that Piotr won was in "Bangkok, Thailand".
+Therefore, the answer to the question is:```Bangkok, Thailand```.
+
+
+A database table is shown as follows: 
+[HEAD]: Team|County|Wins|Years won
+----------------------------------
+[ROW] 1: Greystones|Wicklow|1|2011
+[ROW] 2: Ballymore Eustace|Kildare|1|2010
+[ROW] 3: Maynooth|Kildare|1|2009
+[ROW] 4: Ballyroan Abbey|Laois|1|2008
+[ROW] 5: Fingal Ravens|Dublin|1|2007
+[ROW] 6: Confey|Kildare|1|2006
+[ROW] 7: Crettyard|Laois|1|2005
+[ROW] 8: Wolfe Tones|Meath|1|2004
+[ROW] 9: Dundalk Gaels|Louth|1|2003
+
+Answer the following question based on the data above: "which team won previous to crettyard?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+"Crettyard" won in "2005".
+"Wolfe Tones" won in "2004".
+"Wolfe Tones" won previous to "Crettyard".
+Therefore, the answer to the question is:```Wolfe Tones```.
+
+
+A database table is shown as follows:
+[HEAD]: Rank|City|Passengers|Ranking|Airline
+------------------------------------
+[ROW] 1: 1|United States, Los Angeles|14,749||Alaska Airlines
+[ROW] 2: 2|United States, Houston|5,465||United Express
+[ROW] 3: 3|Canada, Calgary|3,761||Air Transat, WestJet
+[ROW] 4: 4|Canada, Saskatoon|2,282|4|
+[ROW] 5: 5|Canada, Vancouver|2,103||Air Transat
+[ROW] 6: 6|United States, Phoenix|1,829|1|US Airways
+[ROW] 7: 7|Canada, Toronto|1,202|1|Air Transat, CanJet
+[ROW] 8: 8|Canada, Edmonton|110||
+[ROW] 9: 9|United States, Oakland|107||
+
+Answer the following question based on the data above: "how many more passengers flew to los angeles than to saskatoon from manzanillo airport in 2013?" Generate step-by-step reasoning.
+
+Reasoning steps:
+The table seems to show the number of passengers departing from manzanillo airport in 2013.
+The number of passengers departing to "United States, Los Angeles" is "14,749".
+The number of passengers departing to "Canada, Saskatoon" is "2,282".
+There are "14,749" - "2,282" = 12,467 more passengers departing to "United States, Los Angeles" than "Canada, Saskatoon".
+Therefore, the answer to the question is:```12,467```.

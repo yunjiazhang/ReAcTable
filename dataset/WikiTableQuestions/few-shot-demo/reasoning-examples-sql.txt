@@ -1,0 +1,89 @@
+A database table "df" is shown as follows:
+Year	Division	League	Regular Season	Playoffs	Open Cup	Avg. Attendance
+2001	2	USL A-League	4th, Western	Quarterfinals	Did not qualify	7,169
+2002	2	USL A-League	2nd, Pacific	1st Round	Did not qualify	6,260
+2003	2	USL A-League	3rd, Pacific	Did not qualify	Did not qualify	5,871
+2004	2	USL A-League	1st, Western	Quarterfinals	4th Round	5,628
+2005	2	USL First Division	5th	Quarterfinals	4th Round	6,028
+2006	2	USL First Division	11th	Did not qualify	3rd Round	5,575
+2007	2	USL First Division	2nd	Semifinals	2nd Round	6,851
+2008	2	USL First Division	11th	Did not qualify	1st Round	8,567
+2009	2	USL First Division	1st	Semifinals	3rd Round	9,734
+2010	2	USSF D-2 Pro League	3rd, USL (3rd)	Quarterfinals	3rd Round	10,727
+
+Answer the following question with SQL based on the data above: "what was the last year where this team was a part of the usl a-league?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+This table appears to show the division of a team in each year.
+The team was "USL A-League" in "2001", "2002", "2003", and "2004".
+The last year was "2004".
+Therefore, the semantically and syntactically correct SQL query that answers the question is:```SELECT Year FROM df WHERE  League = "USL A-League" ORDER BY Year DESC LIMIT 1;```
+----------------------------------------------------------------------
+A database table "df" is shown as follows:
+Year	Competition	Venue	Position	Event	Notes
+2001	World Youth Championships	Debrecen, Hungary	2nd	400 m	47.12
+2001	World Youth Championships	Debrecen, Hungary	1st	Medley relay	1:50.46
+2001	European Junior Championships	Grosseto, Italy	1st	4x400 m relay	3:06.12
+2003	European Junior Championships	Tampere, Finland	3rd	400 m	46.69
+2003	European Junior Championships	Tampere, Finland	2nd	4x400 m relay	3:08.62
+2005	European U23 Championships	Erfurt, Germany	11th (sf)	400 m	46.62
+2005	European U23 Championships	Erfurt, Germany	1st	4x400 m relay	3:04.41
+2005	Universiade	Izmir, Turkey	7th	400 m	46.89
+2005	Universiade	Izmir, Turkey	1st	4x400 m relay	3:02.57
+2006	World Indoor Championships	Moscow, Russia	2nd (h)	4x400 m relay	3:06.10
+2006	European Championships	Gothenburg, Sweden	3rd	4x400 m relay	3:01.73
+2007	European Indoor Championships	Birmingham, United Kingdom	3rd	4x400 m relay	3:08.14
+2007	Universiade	Bangkok, Thailand	7th	400 m	46.85
+2007	Universiade	Bangkok, Thailand	1st	4x400 m relay	3:02.05
+2008	World Indoor Championships	Valencia, Spain	4th	4x400 m relay	3:08.76
+2008	Olympic Games	Beijing, China	7th	4x400 m relay	3:00.32
+2009	Universiade	Belgrade, Serbia	2nd	4x400 m relay	3:05.69
+
+Answer the following question with SQL based on the data above: "in what city did piotr's last 1st place finish occur?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+The tables shows the competition ranking of Piotr.
+Piotr won 1st place in "Debrecen, Hungary" ("2001"), "Grosseto, Italy" ("2001"), "Izmir, Turkey" ("2005"), and "Bangkok, Thailand" ("2007").
+The last 1st place that Piotr won was in "Bangkok, Thailand".
+Therefore, the semantically and syntactically correct SQL query that answers the question is:```SELECT Venue FROM df WHERE Position="1st" ORDER BY Year DESC LIMIT 1;```
+----------------------------------------------------------------------
+A database table "df" is shown as follows:
+Team	County	Wins	Years_won
+Greystones	Wicklow	1	2011
+Ballymore Eustace	Kildare	1	2010
+Maynooth	Kildare	1	2009
+Ballyroan Abbey	Laois	1	2008
+ 	Dublin	1	2007
+Confey	Kildare	1	2006
+Crettyard	Laois	1	2005
+Wolfe Tones	Meath	1	2004
+Dundalk Gaels	Louth	1	2003
+
+Answer the following question with SQL based on the data above: "which team won previous to crettyard?" Generate step-by-step reasoning.
+
+Reasoning steps: 
+"Crettyard" won in "2005".
+"Wolfe Tones" won in "2004".
+"Wolfe Tones" won previous to "Crettyard".
+Therefore, the semantically and syntactically correct SQL query that answers the question is:```SELECT Team FROM df WHERE Years_won < (SELECT Years_won FROM df WHERE Team="Crettyard") ORDER BY Years_won DESC LIMIT 1;```
+----------------------------------------------------------------------
+A database table "df" is shown as follows:
+Rank	City	Passengers	Ranking	Airline
+1	United States, Los Angeles	14,749		Alaska Airlines
+2	United States, Houston	5,465		United Express
+3	Canada, Calgary	3,761		Air Transat, WestJet
+4	Canada, Saskatoon	2,282	4	
+5	Canada, Vancouver	2,103		Air Transat
+6	United States, Phoenix	1,829	1	US Airways
+7	Canada, Toronto	1,202	1	Air Transat, CanJet
+8	Canada, Edmonton	110		
+9	United States, Oakland	107		
+
+Answer the following question with SQL based on the data above: "how many more passengers flew to los angeles than to saskatoon from manzanillo airport in 2013?" Generate step-by-step reasoning.
+
+Reasoning steps:
+The table seems to show the number of passengers departing from manzanillo airport in 2013.
+The number of passengers departing to "United States, Los Angeles" is "14,749".
+The number of passengers departing to "Canada, Saskatoon" is "2,282".
+There are "14,749" - "2,282" = 12,467 more passengers departing to "United States, Los Angeles" than "Canada, Saskatoon".
+Therefore, the semantically and syntactically correct SQL query that answers the question is:```SELECT (SELECT Passengers WHERE City = "United States, Los Angeles") - (SELECT Passengers WHERE City = "Canada, Saskatoon");```

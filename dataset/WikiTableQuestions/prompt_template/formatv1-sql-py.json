@@ -1,0 +1,7 @@
+{
+    "prompt_template": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". Execute SQL or Python code step-by-step and finally answer the question. Use SQL to process the query and use python to reformat the data.",
+    "intermediate_prompt_template":{
+        "SQL": "The database table DF after executing the SQL query is shown as follows:\n{}\n\nContinue to answer the following question based on the data above: \"{}\". Execute SQL or Python code step-by-step and finally answer the question. Use SQL to process the query and use python to reformat the data.",
+        "Python": "The database table DF after executing the Python code is shown as follows:\n{}\n\nContinue to answer the following question based on the data above: \"{}\". Execute SQL or Python code step-by-step and finally answer the question. Use SQL to process the query and use python to reformat the data."
+    }
+}

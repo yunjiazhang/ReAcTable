@@ -1,0 +1,148 @@
+The database table DF is shown as follows:
+[HEAD]: Year|Division|League|Regular Season|Playoffs|Open Cup|Avg. Attendance
+---
+[ROW] 1: 2001|2|USL A-League|4th, Western|Quarterfinals|Did not qualify|7,169
+[ROW] 2: 2002|2|USL A-League|2nd, Pacific|1st Round|Did not qualify|6,260
+[ROW] 3: 2003|2|USL A-League|3rd, Pacific|Did not qualify|Did not qualify|5,871
+[ROW] 4: 2004|2|USL A-League|1st, Western|Quarterfinals|4th Round|5,628
+[ROW] 5: 2005|2|USL First Division|5th|Quarterfinals|4th Round|6,028
+[ROW] 6: 2006|2|USL First Division|11th|Did not qualify|3rd Round|5,575
+[ROW] 7: 2007|2|USL First Division|2nd|Semifinals|2nd Round|6,851
+[ROW] 8: 2008|2|USL First Division|11th|Did not qualify|1st Round|8,567
+[ROW] 9: 2009|2|USL First Division|1st|Semifinals|3rd Round|9,734
+[ROW] 10: 2010|2|USSF D-2 Pro League|3rd, USL (3rd)|Quarterfinals|3rd Round|10,727
+
+Answer the following question based on the data above: "what was the last year where this team was a part of the usl a-league?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT * FROM DF WHERE Division = "USL A-League";```.
+
+The database table DF is shown as follows:
+[HEAD]: Year|Division|League|Regular Season|Playoffs|Open Cup|Avg. Attendance
+---
+[ROW] 1: 2001|2|USL A-League|4th, Western|Quarterfinals|Did not qualify|7,169
+[ROW] 2: 2002|2|USL A-League|2nd, Pacific|1st Round|Did not qualify|6,260
+[ROW] 3: 2003|2|USL A-League|3rd, Pacific|Did not qualify|Did not qualify|5,871
+[ROW] 4: 2004|2|USL A-League|1st, Western|Quarterfinals|4th Round|5,628
+
+Answer the following question based on the data above: "what was the last year where this team was a part of the usl a-league?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT Year FROM DF ORDER BY Year DESC LIMIT 1;```.
+
+The database table DF is shown as follows:
+[HEAD]: Year
+---
+[ROW] 1: 2004
+
+Answer the following question based on the data above: "what was the last year where this team was a part of the usl a-league?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```2004```.
+
+The database table DF is shown as follows:
+[HEAD]: number|builder|entered_service|withdrawn
+---
+[ROW] 1: 439|NZR Addington|9-1-1909|2-3-1957
+[ROW] 2: 443|NZR Addington|1-12-1909|2-3-1957
+[ROW] 3: 444|NZR Addington|3-2-1910|2-3-1957
+[ROW] 4: 446|NZR Addington|30-4-1910|6-12-1946
+[ROW] 5: 588|NZR Addington|14-10-1913|2-3-1957
+[ROW] 6: 589|NZR Addington|11-11-1949|6-1949
+
+Answer the following question based on the data above: "how many number were in service in 1910?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Python: ```
+def get_date_year(s):
+    from dateutil import parser
+    return parser.parse(s).year
+DF['entered_service_year'] = DF.apply(lambda x: get_date_year(x['entered_service']), axis=1)
+DF['withdrawn_year'] = DF.apply(lambda x: get_date_year(x['withdrawn']), axis=1)
+```.
+
+The database table DF is shown as follows:
+[HEAD]: number|builder|entered_service|withdrawn|entered_service_year|withdrawn_year
+---
+[ROW] 1: 439|NZR Addington|9-1-1909|2-3-1957|1909|1957
+[ROW] 2: 443|NZR Addington|1-12-1909|2-3-1957|1909|1957
+[ROW] 3: 444|NZR Addington|3-2-1910|2-3-1957|1910|1957
+[ROW] 4: 446|NZR Addington|30-4-1910|6-12-1946|1910|1946
+[ROW] 5: 588|NZR Addington|14-10-1913|2-3-1957|1913|1957
+[ROW] 6: 589|NZR Addington|11-11-1949|6-1949|1949|1949
+
+Answer the following question based on the data above: "how many number were in service in 1910?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT * FROM DF WHERE entered_service_year<=1910 AND withdrawn_year>=1910;```.
+
+The database table DF is shown as follows:
+[HEAD]: number|builder|entered_service|withdrawn|entered_service_year|withdrawn_year
+---
+[ROW] 1: 439|NZR Addington|9-1-1909|2-3-1957|1909|1957
+[ROW] 2: 443|NZR Addington|1-12-1909|2-3-1957|1909|1957
+[ROW] 3: 444|NZR Addington|3-2-1910|2-3-1957|1910|1957
+[ROW] 4: 446|NZR Addington|30-4-1910|6-12-1946|1910|1946
+
+Answer the following question based on the data above: "how many number were in service in 1910?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT COUNT(*) FROM DF;```.
+
+The database table DF is shown as follows:
+[HEAD]: COUNT(*)
+---
+[ROW] 1: 4
+
+Answer the following question based on the data above: "how many number were in service in 1910?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL code, a Python code, or directly answering the question.
+
+Answer: ```4```.
+
+The database table DF is shown as follows:
+[HEAD]: name|dates|grt|propulsion|port|notes
+---
+[ROW] 1: Arataki  i|1948-84|74|320 bhp diesel, 10 knots (19 km/h)|nan|US Navy harbour tug
+[ROW] 2: Arataki  ii|1984-99|143|1100 bhp diesel, 12 knots (22 km/h)|Timaru|harbour tug
+[ROW] 3: Hipi|1942-56|39|100 bhp diesel, 8 knots (15 km/h)|Auckland|Towing lighters
+[ROW] 4: Kahanui|1942-45|207|800 ihp SR TE coal, 11 knots (20 km/h)|Wanganui|harbour tug
+[ROW] 5: Manawanui  i|1948-52|74|329 bhp diesel, 10 knots (19 km/h)|Auckland|US Navy harbour tug
+[ROW] 6: Meola|1961-|19|76 bhp diesel, 9 knots (17 km/h)|Auckland|work boat
+[ROW] 7: Toia|1926-49|423|1250 ihp SR TE coal, 12 knots (22 km/h)|Wellington|World War I Saint class naval tug, a notable salvage tug
+
+Answer the following question based on the data above: "which ship in auckland had the fastest speed in knots?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Python: ```
+def get_knots(s):
+    import re
+    return float(re.search(", (.*?) knots", s).group(1))
+DF['knots'] = DF.apply(lambda x: get_knots(x['propulsion']), axis=1)
+```.
+
+The database table DF is shown as follows:
+[HEAD]: name|dates|grt|propulsion|port|notes|knots
+---
+[ROW] 1: Arataki  i|1948-84|74|320 bhp diesel, 10 knots (19 km/h)|nan|US Navy harbour tug|10.0
+[ROW] 2: Arataki  ii|1984-99|143|1100 bhp diesel, 12 knots (22 km/h)|Timaru|harbour tug|12.0
+[ROW] 3: Hipi|1942-56|39|100 bhp diesel, 8 knots (15 km/h)|Auckland|Towing lighters|8.0
+[ROW] 4: Kahanui|1942-45|207|800 ihp SR TE coal, 11 knots (20 km/h)|Wanganui|harbour tug|11.0
+[ROW] 5: Manawanui  i|1948-52|74|329 bhp diesel, 10 knots (19 km/h)|Auckland|US Navy harbour tug|10.0
+[ROW] 6: Meola|1961-|19|76 bhp diesel, 9 knots (17 km/h)|Auckland|work boat|9.0
+[ROW] 7: Toia|1926-49|423|1250 ihp SR TE coal, 12 knots (22 km/h)|Wellington|World War I Saint class naval tug, a notable salvage tug|12.0
+
+Answer the following question based on the data above: "which ship in auckland had the fastest speed in knots?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT * FROM DF WHERE port="Auckland";```.
+
+The database table DF is shown as follows:
+[HEAD]: name|dates|grt|propulsion|port|notes|knots
+---
+[ROW] 1: Hipi|1942-56|39|100 bhp diesel, 8 knots (15 km/h)|Auckland|Towing lighters|8.0
+[ROW] 2: Manawanui  i|1948-52|74|329 bhp diesel, 10 knots (19 km/h)|Auckland|US Navy harbour tug|10.0
+[ROW] 3: Meola|1961-|19|76 bhp diesel, 9 knots (17 km/h)|Auckland|work boat|9.0
+
+Answer the following question based on the data above: "which ship in auckland had the fastest speed in knots?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT * FROM DF ORDER BY knots DESC LIMIT 1;```.
+
+The database table DF is shown as follows:
+[HEAD]: name|dates|grt|propulsion|port|notes|knots
+---
+[ROW] 1: Manawanui  i|1948-52|74|329 bhp diesel, 10 knots (19 km/h)|Auckland|US Navy harbour tug|10.0
+
+Answer the following question based on the data above: "which ship in auckland had the fastest speed in knots?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL code, a Python code, or directly answering the question.
+
+Answer: ```Manawanui  i```.

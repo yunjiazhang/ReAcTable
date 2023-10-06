@@ -1,0 +1,25 @@
+The database table DF is shown as follows:
+[HEAD]: year|recipient|nationality|profession|speech
+---
+[ROW] 1: 1997|Elie Wiesel|United States|Professional writer Winner of the Nobel Peace Prize (1986)|nan
+[ROW] 2: 1998|Herman Wouk|United States|Professional writer and 1952 Pulitzer Prize winner|nan
+[ROW] 3: 1999|A.M. Rosenthal|United States|Former New York Times editor Former New York Daily News columnist|nan
+[ROW] 4: 2000|Sir Martin Gilbert|United Kingdom|Historian and writer|nan
+[ROW] 5: 2001|Cynthia Ozick|United States|Professional writer|nan
+[ROW] 6: 2002|Charles Krauthammer|United States|The Washington Post columnist|[1]
+[ROW] 7: 2003|Ruth Roskies Wisse|United States|Yiddish professor of Harvard University|[2]
+[ROW] 8: 2004|Arthur Cohn|Switzerland|Filmmaker and writer|nan
+[ROW] 9: 2005|William Safire|United States|Author, journalist and speechwriter 1978 Pulitzer Prize winner|nan
+[ROW] 10: 2006|Daniel Pipes|United States|Author and historian|nan
+[ROW] 11: 2007|Norman Podhoretz|United States|Author, columnist|nan
+[ROW] 12: 2008|David Be'eri, Mordechai Eliav, Rabbi Yehuda Maly|Israel|nan|nan
+[ROW] 13: 2009|Caroline Glick|Israel|Journalist|nan
+[ROW] 14: 2010|Malcolm Hoenlein|United States|Executive Vice Chairman of the Conference of Presidents of Major American Jewish Organizations|nan
+
+Answer the following question based on the data above: "how many times is professional writer listed as the profession according to this chart?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Python: ```
+def get_profession(s):
+    import re
+    return re.search("^(.*?)", s).group(1)
+DF['profession'] = DF.apply(lambda x: get_profession(x['profession']), axis=1)```.

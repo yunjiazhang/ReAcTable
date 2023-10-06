@@ -1,0 +1,221 @@
+The database table DF is shown as follows:
+[HEAD]: name|c_1989|c_1990|c_1991|c_1992|c_1993|c_1994|c_1995|c_1996|c_1997|c_1998|c_1999|c_2000|c_2001|c_2002|c_2003|c_2004|c_2005|c_2006|c_2007|c_2008|c_2009|c_2010|career_sr|career_win_loss
+---
+[ROW] 1: Australian Open|A|A|1R|A|2R|3R|2R|1R|A|3R|4R|1R|2R|1R|3R|2R|1R|QF|3R|2R|3R|1R|0 / 18|22–18
+[ROW] 2: French Open|1R|2R|4R|1R|1R|3R|1R|A|1R|3R|1R|2R|4R|2R|2R|3R|1R|1R|1R|2R|1R|A|0 / 20|17–20
+[ROW] 3: Wimbledon|A|1R|A|A|A|A|1R|A|1R|A|2R|2R|3R|2R|2R|2R|2R|2R|2R|1R|2R|A|0 / 14|11–14
+...
+[ROW] 17: Annual Win-Loss|nan|2–4|7–5|3–5|6–4|2–1|5–4|2–1|12–6|10–9|10–7|12–9|13–9|9–9|2–7|8–5|7–7|3–8|4–3|2–3|1–2|0–0|nan|120–108
+[ROW] 18: Year End Ranking|235|62|43|43|55|46|102|118|29|41|34|31|22|35|62|52|58|52|37|52|68|–|nan|nan
+
+Answer the following question based on the data above: "did he win more at the australian open or indian wells?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT name, career_win_loss FROM DF WHERE name="Australian Open" or name="Indian Wells";```.
+
+The database table DF is shown as follows:
+[HEAD]: career_win_loss
+---
+[ROW] 1: Australian Open|22–18
+[ROW] 2: Indian Wells|16-13
+
+Answer the following question based on the data above: "did he win more at the australian open or indian wells?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```Australian Open```.
+
+The database table DF is shown as follows:
+[HEAD]: by_race|white|black|aian*|asian|nhpi*
+---
+[ROW] 1: 2000 (total population)|75.43%|4.46%|19.06%|5.24%|0.88%
+[ROW] 2: 2000 (Hispanic only)|3.42%|0.33%|0.45%|0.16%|0.06%
+[ROW] 3: 2005 (total population)|74.71%|4.72%|18.77%|5.90%|0.88%
+...
+[ROW] 6: Growth 2000–05 (non-Hispanic only)|3.49%|11.30%|4.02%|18.96%|5.86%
+[ROW] 7: Growth 2000–05 (Hispanic only)|33.56%|21.02%|14.52%|27.89%|-1.95%
+
+Answer the following question based on the data above: "which hispanic population had the greatest growth from 2000 to 2005?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT * FROM DF WHERE by_race LIKE "Growth 2000–05 (Hispanic only)%";```.
+
+The database table DF is shown as follows:
+[HEAD]: by_race|white|black|aian*|asian|nhpi*
+---
+[ROW] 1: Growth 2000–05 (Hispanic only)|33.56%|21.02%|14.52%|27.89%|-1.95%
+
+Answer the following question based on the data above: "which hispanic population had the greatest growth from 2000 to 2005?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```white```.
+
+The database table DF is shown as follows:
+[HEAD]: rank|mountain_peak|mountain_range|elevation|prominence|isolation|location
+---
+[ROW] 1: 1|Mount Whitney|Sierra Nevada|14,505 ft 4421 m|10,080 ft 3072 m|1,646 mi 2,649 km|36°34′43″N 118°17′31″W﻿ / ﻿36.5786°N 118.2920°W
+[ROW] 2: 2|Mount Williamson|Sierra Nevada|14,379 ft 4383 m|1,677 ft 511 m|5.4 mi 8.7 km|36°39′21″N 118°18′40″W﻿ / ﻿36.6559°N 118.3111°W
+[ROW] 3: 3|White Mountain Peak|White Mountains|14,252 ft 4344 m|7,196 ft 2193 m|67 mi 109 km|37°38′03″N 118°15′21″W﻿ / ﻿37.6341°N 118.2557°W
+...
+[ROW] 15: 15|Red Slate Mountain|Sierra Nevada|13,162 ft 4012 m|1,736 ft 529 m|8 mi 13 km|37°30′27″N 118°52′09″W﻿ / ﻿37.5075°N 118.8693°W
+[ROW] 16: 16|Mount Ritter|Sierra Nevada|13,149 ft 4008 m|3,990 ft 1216 m|22 mi 35 km|37°41′21″N 119°11′59″W﻿ / ﻿37.6891°N 119.1996°W
+
+Answer the following question based on the data above: "which mountain peak has a prominence more than 10,000 ft?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT mountain_peak, prominence FROM DF;```.
+
+The database table DF is shown as follows:
+[HEAD]: mountain_peak|prominence
+---
+[ROW] 1: Mount Whitney|10,080 ft 3072 m
+[ROW] 2: Mount Williamson|1,677 ft 511 m
+[ROW] 3: White Mountain Peak|7,196 ft 2193 m
+...
+[ROW] 15: Red Slate Mountain|1,736 ft 529 m
+[ROW] 16: Mount Ritter|3,990 ft 1216 m
+
+Answer the following question based on the data above: "which mountain peak has a prominence more than 10,000 ft?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Python: ```
+def get_ft(s):
+    import re
+    return float(re.search("(.*?) ft", s).group(1))
+DF['prominence_ft'] = DF.apply(lambda x: get_ft(x['prominence']), axis=1)
+```.
+
+The database table DF is shown as follows:
+[HEAD]: mountain_peak|prominence|prominence_ft
+---
+[ROW] 1: Mount Whitney|10,080 ft 3072 m|10080.0
+[ROW] 2: Mount Williamson|1,677 ft 511 m|1677.0
+[ROW] 3: White Mountain Peak|7,196 ft 2193 m|7196.0
+...
+[ROW] 15: Red Slate Mountain|1,736 ft 529 m|1736.0
+[ROW] 16: Mount Ritter|3,990 ft 1216 m|3990.0
+
+Answer the following question based on the data above: "which mountain peak has a prominence more than 10,000 ft?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT mountain_peak FROM DF WHERE prominence_ft>10000;```.
+
+The database table DF is shown as follows:
+[HEAD]: mountain_peak
+---
+[ROW] 1: Mount Whitney
+
+Answer the following question based on the data above: "which mountain peak has a prominence more than 10,000 ft?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```Mount Whitney```.
+
+The database table DF is shown as follows:
+[HEAD]: season|division|tms|pos|fa_cup|afc_cl
+---
+[ROW] 1: 2003|1|12|11|Quarter final|-
+[ROW] 2: 2004|1|13|10|Round of 32|-
+[ROW] 3: 2005|1|13|8|Quarter final|-
+...
+[ROW] 9: 2011|1|16|12|Round of 32|-
+[ROW] 10: 2012|1|16|10|Round of 16|-
+
+Answer the following question based on the data above: "how far did they make it in the fa cup after 2009?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT fa_cup FROM DF WHERE season>2009;```.
+
+The database table DF is shown as follows:
+[HEAD]: fa_cup
+---
+[ROW] 1: Round of 32
+[ROW] 2: Round of 32
+[ROW] 3: Round of 16
+
+Answer the following question based on the data above: "how far did they make it in the fa cup after 2009?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```Round of 16```.
+
+The database table DF is shown as follows:
+[HEAD]: unnamed_0|c_2000|c_2001|c_2002|c_2003|c_2004|c_2005|c_2006|c_2007|c_2008|c_2009|c_2010|c_2011|c_2012
+---
+[ROW] 1: Hydro power|1,150|1,161|1,171|1,247|1,281|1,293|1,316|1,326|1,357|1,379|1,382|1,401|1,584
+[ROW] 2: Thermal|685|835|1,056|1,233|1,215|1,155|1,155|1,155|1,285|1,290|1,390|1,690|1,638
+[ROW] 3: Other renewables|3|3|3|3|3|3|3|3|3|15|45|50|90
+...
+[ROW] 7: Other renewables|3|3|4|3|3|5|4|4|8|27|86|121|169
+[ROW] 8: Total production|6,685|6,520|6,167|7,611|8,043|8,770|9,389|9,815|9,901|9,883|10,715|11,528|11,800
+
+Answer the following question based on the data above: "did the hydro power increase or decrease from 2010 to 2012?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT c_2010, c_2012 FROM DF WHERE unnamed_0="Hydro power";```.
+
+The database table DF is shown as follows:
+[HEAD]: c_2010|c_2012
+---
+[ROW] 1: 1,382|1,584
+
+Answer the following question based on the data above: "did the hydro power increase or decrease from 2010 to 2012?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```increase```.
+
+The database table DF is shown as follows:
+[HEAD]: num|season|competition|date|round|opponent|h_a|result|scorer_s
+---
+[ROW] 1: 35|2011|AFC Champions League|2011-03-02|Group Stage|Al-Ain|A|1–0|S : Dejan Damjanović
+[ROW] 2: 36|2011|AFC Champions League|2011-03-15|Group Stage|Hangzhou Greentown|H|3–0|S : Dejan Damjanović, Ou Kyoung-Jun, Mauricio Molina
+[ROW] 3: 37|2011|AFC Champions League|2011-04-06|Group Stage|Nagoya Grampus|A|1–1|S : Choi Hyun-Tae N : Kensuke Nagai
+...
+[ROW] 22: 56|2013|AFC Champions League|2013-10-26|Final 1st leg|Guangzhou Evergrande|H|2–2|S : Sergio Escudero, Dejan Damjanović G : Elkeson, Gao Lin
+[ROW] 23: 57|2013|AFC Champions League|2013-11-09|Final 2nd leg|Guangzhou Evergrande|A|1–1|S : Dejan Damjanović G : Elkeson
+
+Answer the following question based on the data above: "how many consecutive games did dejan damjanovic score a goal in during the 2013 season?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT num FROM DF WHERE season=2013 AND scorer_s LIKE "%Dejan Damjanović%";```.
+
+The database table DF is shown as follows:
+[HEAD]: num
+---
+[ROW] 1: 44
+[ROW] 2: 52
+[ROW] 3: 53
+[ROW] 4: 54
+[ROW] 5: 56
+[ROW] 6: 57
+
+Answer the following question based on the data above: "how many consecutive games did dejan damjanovic score a goal in during the 2013 season?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```3```.
+
+The database table DF is shown as follows:
+[HEAD]: member|party|term
+---
+[ROW] 1: John Ryan|None|1859–1864
+[ROW] 2: James Martin|None|1864–1869
+[ROW] 3: James Watson|None|1869–1880
+...
+[ROW] 16: Member|Party|Term
+[ROW] 17: Ian Armstrong|National|1981–2007
+
+Answer the following question based on the data above: "which member served the longest?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Python: ```
+def get_duration(s):
+    start = int(s.split('–')[0])
+    end = int(s.split('–')[1])
+    return end - start
+DF['duration'] = DF.apply(lambda x: get_duration(x['term']), axis=1)
+```.
+
+The database table DF is shown as follows:
+[HEAD]: member|party|term|duration
+---
+[ROW] 1: John Ryan|None|1859–1864|5.0
+[ROW] 2: James Martin|None|1864–1869|5.0
+[ROW] 3: James Watson|None|1869–1880|11.0
+...
+[ROW] 16: Member|Party|Term|nan
+[ROW] 17: Ian Armstrong|National|1981–2007|26.0
+
+Answer the following question based on the data above: "which member served the longest?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+SQL: ```SELECT member FROM DF ORDER BY duration DESC LIMIT 1;```.
+
+The database table DF is shown as follows:
+[HEAD]: member
+---
+[ROW] 1: Ian Armstrong
+
+Answer the following question based on the data above: "which member served the longest?". Execute SQL or Python code step-by-step and finally answer the question. Choose from generating a SQL, Python code, or directly answering the question.
+
+Answer: ```Ian Armstrong```.

@@ -1,0 +1,274 @@
+[
+    
+    {
+        "utterance": "did he win more at the australian open or indian wells?",
+        "tables": [ 
+            "[HEAD]: name|c_1989|c_1990|c_1991|c_1992|c_1993|c_1994|c_1995|c_1996|c_1997|c_1998|c_1999|c_2000|c_2001|c_2002|c_2003|c_2004|c_2005|c_2006|c_2007|c_2008|c_2009|c_2010|career_sr|career_win_loss\n---\n[ROW] 1: Australian Open|A|A|1R|A|2R|3R|2R|1R|A|3R|4R|1R|2R|1R|3R|2R|1R|QF|3R|2R|3R|1R|0 / 18|22–18\n[ROW] 2: French Open|1R|2R|4R|1R|1R|3R|1R|A|1R|3R|1R|2R|4R|2R|2R|3R|1R|1R|1R|2R|1R|A|0 / 20|17–20\n[ROW] 3: Wimbledon|A|1R|A|A|A|A|1R|A|1R|A|2R|2R|3R|2R|2R|2R|2R|2R|2R|1R|2R|A|0 / 14|11–14\n...\n[ROW] 17: Annual Win-Loss|nan|2–4|7–5|3–5|6–4|2–1|5–4|2–1|12–6|10–9|10–7|12–9|13–9|9–9|2–7|8–5|7–7|3–8|4–3|2–3|1–2|0–0|nan|120–108\n[ROW] 18: Year End Ranking|235|62|43|43|55|46|102|118|29|41|34|31|22|35|62|52|58|52|37|52|68|–|nan|nan",
+            "[HEAD]: career_win_loss\n---\n[ROW] 1: Australian Open|22–18\n[ROW] 2: Indian Wells|16-13"
+            
+        ],
+        "responses": [ 
+            "SQL: ```SELECT name, career_win_loss FROM DF WHERE name=\"Australian Open\" or name=\"Indian Wells\";```.",
+            "Answer: ```Australian Open```."
+        ]
+    },
+    
+    {
+        "utterance": "which hispanic population had the greatest growth from 2000 to 2005?",
+        "tables": [ 
+            "[HEAD]: by_race|white|black|aian*|asian|nhpi*\n---\n[ROW] 1: 2000 (total population)|75.43%|4.46%|19.06%|5.24%|0.88%\n[ROW] 2: 2000 (Hispanic only)|3.42%|0.33%|0.45%|0.16%|0.06%\n[ROW] 3: 2005 (total population)|74.71%|4.72%|18.77%|5.90%|0.88%\n...\n[ROW] 6: Growth 2000–05 (non-Hispanic only)|3.49%|11.30%|4.02%|18.96%|5.86%\n[ROW] 7: Growth 2000–05 (Hispanic only)|33.56%|21.02%|14.52%|27.89%|-1.95%",
+            "[HEAD]: by_race|white|black|aian*|asian|nhpi*\n---\n[ROW] 1: Growth 2000–05 (Hispanic only)|33.56%|21.02%|14.52%|27.89%|-1.95%"       
+        ],
+        "responses": [ 
+            "SQL: ```SELECT * FROM DF WHERE by_race LIKE \"Growth 2000–05 (Hispanic only)%\";```.",
+            "Answer: ```white```."
+            
+        ]
+    },
+    
+    {
+        "utterance": "which mountain peak has a prominence more than 10,000 ft?",
+        "tables": [ 
+            "[HEAD]: rank|mountain_peak|mountain_range|elevation|prominence|isolation|location\n---\n[ROW] 1: 1|Mount Whitney|Sierra Nevada|14,505 ft 4421 m|10,080 ft 3072 m|1,646 mi 2,649 km|36°34′43″N 118°17′31″W﻿ / ﻿36.5786°N 118.2920°W\n[ROW] 2: 2|Mount Williamson|Sierra Nevada|14,379 ft 4383 m|1,677 ft 511 m|5.4 mi 8.7 km|36°39′21″N 118°18′40″W﻿ / ﻿36.6559°N 118.3111°W\n[ROW] 3: 3|White Mountain Peak|White Mountains|14,252 ft 4344 m|7,196 ft 2193 m|67 mi 109 km|37°38′03″N 118°15′21″W﻿ / ﻿37.6341°N 118.2557°W\n...\n[ROW] 15: 15|Red Slate Mountain|Sierra Nevada|13,162 ft 4012 m|1,736 ft 529 m|8 mi 13 km|37°30′27″N 118°52′09″W﻿ / ﻿37.5075°N 118.8693°W\n[ROW] 16: 16|Mount Ritter|Sierra Nevada|13,149 ft 4008 m|3,990 ft 1216 m|22 mi 35 km|37°41′21″N 119°11′59″W﻿ / ﻿37.6891°N 119.1996°W",
+            "[HEAD]: mountain_peak|prominence\n---\n[ROW] 1: Mount Whitney|10,080 ft 3072 m\n[ROW] 2: Mount Williamson|1,677 ft 511 m\n[ROW] 3: White Mountain Peak|7,196 ft 2193 m\n...\n[ROW] 15: Red Slate Mountain|1,736 ft 529 m\n[ROW] 16: Mount Ritter|3,990 ft 1216 m",
+            "[HEAD]: mountain_peak|prominence|prominence_ft\n---\n[ROW] 1: Mount Whitney|10,080 ft 3072 m|10080.0\n[ROW] 2: Mount Williamson|1,677 ft 511 m|1677.0\n[ROW] 3: White Mountain Peak|7,196 ft 2193 m|7196.0\n...\n[ROW] 15: Red Slate Mountain|1,736 ft 529 m|1736.0\n[ROW] 16: Mount Ritter|3,990 ft 1216 m|3990.0",
+            "[HEAD]: mountain_peak\n---\n[ROW] 1: Mount Whitney"
+        ],
+        "responses": [ 
+            "SQL: ```SELECT mountain_peak, prominence FROM DF;```.",
+            "Python: ```def get_ft(s):\n    import re\n    return float(re.search(\"(.*?) ft\", s).group(1))\nDF['prominence_ft'] = DF.apply(lambda x: get_ft(x['prominence']), axis=1)\n```.",
+            "SQL: ```SELECT mountain_peak FROM DF WHERE prominence_ft>10000;```.",
+            "Answer: ```Mount Whitney```."
+        ]
+    },
+    
+    {
+        "utterance": "how far did they make it in the fa cup after 2009?",
+        "tables": [ 
+            "[HEAD]: season|division|tms|pos|fa_cup|afc_cl\n---\n[ROW] 1: 2003|1|12|11|Quarter final|-\n[ROW] 2: 2004|1|13|10|Round of 32|-\n[ROW] 3: 2005|1|13|8|Quarter final|-\n...\n[ROW] 9: 2011|1|16|12|Round of 32|-\n[ROW] 10: 2012|1|16|10|Round of 16|-",
+            "[HEAD]: fa_cup\n---\n[ROW] 1: Round of 32\n[ROW] 2: Round of 32\n[ROW] 3: Round of 16"
+        ],
+        "responses": [ 
+            "SQL: ```SELECT fa_cup FROM DF WHERE season>2009;```.",
+            "Answer: ```Round of 16```."
+        ]
+    },
+
+    {
+        "utterance": "did the hydro power increase or decrease from 2010 to 2012?",
+        "tables": [ 
+            "[HEAD]: unnamed_0|c_2000|c_2001|c_2002|c_2003|c_2004|c_2005|c_2006|c_2007|c_2008|c_2009|c_2010|c_2011|c_2012\n---\n[ROW] 1: Hydro power|1,150|1,161|1,171|1,247|1,281|1,293|1,316|1,326|1,357|1,379|1,382|1,401|1,584\n[ROW] 2: Thermal|685|835|1,056|1,233|1,215|1,155|1,155|1,155|1,285|1,290|1,390|1,690|1,638\n[ROW] 3: Other renewables|3|3|3|3|3|3|3|3|3|15|45|50|90\n...\n[ROW] 7: Other renewables|3|3|4|3|3|5|4|4|8|27|86|121|169\n[ROW] 8: Total production|6,685|6,520|6,167|7,611|8,043|8,770|9,389|9,815|9,901|9,883|10,715|11,528|11,800",
+            "[HEAD]: c_2010|c_2012\n---\n[ROW] 1: 1,382|1,584"
+        ],
+        "responses": [ 
+            "SQL: ```SELECT c_2010, c_2012 FROM DF WHERE unnamed_0=\"Hydro power\";```.",
+            "Answer: ```increase```."
+        ]
+    },
+    
+    {
+        "utterance": "how many consecutive games did dejan damjanovic score a goal in during the 2013 season?",
+        "tables": [ 
+            "[HEAD]: num|season|competition|date|round|opponent|h_a|result|scorer_s\n---\n[ROW] 1: 35|2011|AFC Champions League|2011-03-02|Group Stage|Al-Ain|A|1–0|S : Dejan Damjanović\n[ROW] 2: 36|2011|AFC Champions League|2011-03-15|Group Stage|Hangzhou Greentown|H|3–0|S : Dejan Damjanović, Ou Kyoung-Jun, Mauricio Molina\n[ROW] 3: 37|2011|AFC Champions League|2011-04-06|Group Stage|Nagoya Grampus|A|1–1|S : Choi Hyun-Tae N : Kensuke Nagai\n...\n[ROW] 22: 56|2013|AFC Champions League|2013-10-26|Final 1st leg|Guangzhou Evergrande|H|2–2|S : Sergio Escudero, Dejan Damjanović G : Elkeson, Gao Lin\n[ROW] 23: 57|2013|AFC Champions League|2013-11-09|Final 2nd leg|Guangzhou Evergrande|A|1–1|S : Dejan Damjanović G : Elkeson",
+           "[HEAD]: num\n---\n[ROW] 1: 44\n[ROW] 2: 52\n[ROW] 3: 53\n[ROW] 4: 54\n[ROW] 5: 56\n[ROW] 6: 57"
+        ],
+        "responses": [ 
+            "SQL: ```SELECT num FROM DF WHERE season=2013 AND scorer_s LIKE \"%Dejan Damjanović%\";```.",
+            "Answer: ```3```."
+        ]
+    },
+    
+    {
+        "utterance": "which member served the longest?",
+        "tables": [ 
+            "[HEAD]: member|party|term\n---\n[ROW] 1: John Ryan|None|1859–1864\n[ROW] 2: James Martin|None|1864–1869\n[ROW] 3: James Watson|None|1869–1880\n...\n[ROW] 16: Member|Party|Term\n[ROW] 17: Ian Armstrong|National|1981–2007",
+            "[HEAD]: member|party|term|duration\n---\n[ROW] 1: John Ryan|None|1859–1864|5.0\n[ROW] 2: James Martin|None|1864–1869|5.0\n[ROW] 3: James Watson|None|1869–1880|11.0\n...\n[ROW] 16: Member|Party|Term|nan\n[ROW] 17: Ian Armstrong|National|1981–2007|26.0",
+            "[HEAD]: member\n---\n[ROW] 1: Ian Armstrong"
+        ],
+        "responses": [ 
+            "Python: ```def get_duration(s):\n    start = int(s.split('–')[0])\n    end = int(s.split('–')[1])\n    return end - start\nDF['duration'] = DF.apply(lambda x: get_duration(x['term']), axis=1)\n```.",
+            "SQL: ```SELECT member FROM DF ORDER BY duration DESC LIMIT 1;```.",
+            "Answer: ```Ian Armstrong```."
+        ]
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    {
+        "utterance": "what was the last year where this team was a part of the usl a-league?",
+        "tables": [
+            "[HEAD]: Year|Division|League|Regular Season|Playoffs|Open Cup|Avg. Attendance\n---\n[ROW] 1: 2001|2|USL A-League|4th, Western|Quarterfinals|Did not qualify|7,169\n[ROW] 2: 2002|2|USL A-League|2nd, Pacific|1st Round|Did not qualify|6,260\n[ROW] 3: 2003|2|USL A-League|3rd, Pacific|Did not qualify|Did not qualify|5,871\n[ROW] 4: 2004|2|USL A-League|1st, Western|Quarterfinals|4th Round|5,628\n[ROW] 5: 2005|2|USL First Division|5th|Quarterfinals|4th Round|6,028\n[ROW] 6: 2006|2|USL First Division|11th|Did not qualify|3rd Round|5,575\n[ROW] 7: 2007|2|USL First Division|2nd|Semifinals|2nd Round|6,851\n[ROW] 8: 2008|2|USL First Division|11th|Did not qualify|1st Round|8,567\n[ROW] 9: 2009|2|USL First Division|1st|Semifinals|3rd Round|9,734\n[ROW] 10: 2010|2|USSF D-2 Pro League|3rd, USL (3rd)|Quarterfinals|3rd Round|10,727",
+            "[HEAD]: Year\n---\n[ROW] 1: 2004"
+        ],
+        "responses": [
+            "SQL: ```SELECT Year FROM DF ORDER BY Year DESC LIMIT 1;```.",
+            "Answer: ```2004```."
+        ]
+    },
+    
+    {
+        "utterance": "has the dominican republic won more or less medals than china?",
+        "tables": [
+            "[HEAD]: rank|nation|gold|silver|bronze|total\n---\n[ROW] 1: 1.|United States|8|7|1|16\n[ROW] 2: 2.|Russia|7|7|5|19\n[ROW] 3: 3.|France|3|3|2|8\n[ROW] 4: 4.|Ethiopia|3|2|2|7\n[ROW] 5: 5.|Belarus|3|1|3|7\n[ROW] 6: 6.|Sweden|2|1|2|5\n[ROW] 7: 7.|Kenya|2|1|1|4\n[ROW] 8: 7=|South Africa|2|1|1|4\n...\n[ROW] 42: 40=|Netherlands|0|0|1|1\n[ROW] 43: 40=|Senegal|0|0|1|1",
+            "[HEAD]: rank|nation|gold|silver|bronze|total\n---\n[ROW] 1: 14=|Dominican Republic|1|0|0|1\n[ROW] 2: 39.|China|0|0|2|2",
+            "[HEAD]: nation|total\n---\n[ROW] 1: Dominican Republic|1\n[ROW] 2: China|2"
+        ],
+        "responses": [
+            "SQL: ```SELECT * FROM DF WHERE nation=\"China\" or nation=\"Dominican Republic\";```.",
+            "SQL: ```SELECT nation, total FROM DF;```.",
+            "Answer: ```less```."
+        ]
+    },
+    
+    {
+        "utterance": "did they place better in 1987/88 or 1993/94?",
+        "tables": [
+            "[HEAD]: season|tier|division|place\n---\n[ROW] 1: 1963–86|5|Regional|—\n[ROW] 2: 1986/87|5|Preferente|2nd\n[ROW] 3: 1987/88|4|3ª|15th\n[ROW] 4: 1988/89|4|3ª|15th\n[ROW] 5: 1989/90|4|3ª|17th\n[ROW] 6: 1990/91|4|3ª|12th\n[ROW] 7: 1991/92|4|3ª|18th\n[ROW] 8: 1992/93|5|Preferente|1st\n...\n[ROW] 13: 1997/98|4|3ª|7th\n[ROW] 14: 1998/99|4|3ª|18th",
+            "[HEAD]: season|tier|division|place\n---\n[ROW] 1: 1987/88|4|3ª|15th\n[ROW] 2: 1993/94|4|3ª|14th"
+            
+        ],
+        "responses": [
+           "SQL: ```SELECT * FROM DF WHERE season=\"1987/88\" or season=\"1993/94\";```.",
+            "Answer: ```1993/94```."
+        ]
+    },
+    
+    {
+        "utterance": "which album was released after \"raw\"?",
+        "tables": [
+            "[HEAD]: release_date|album|record_label|uk_albums_chart|us_billboard_c_200_chart\n---\n[ROW] 1: July 1983|The Alarm (EP)|I.R.S. Records|-|126\n[ROW] 2: February 1984|Declaration|I.R.S. Records|6|50\n[ROW] 3: October 1985|Strength|I.R.S. Records|18|39\n[ROW] 4: November 1987|Eye of the Hurricane|I.R.S. Records|23|77\n[ROW] 5: November 1988|Electric Folklore Live|I.R.S. Records|62|167\n[ROW] 6: 1988|Compact Hits|A&M Records|-|-\n[ROW] 7: September 1989|Change ¥|I.R.S. Records|13|75\n[ROW] 8: November 1990|Standards|I.R.S. Records|47|177\n...\n[ROW] 44: April 2010|Direct Action °|21st Century|-|-\n[ROW] 45: March 2013|Vinyl (2012 film) Soundtrack °|-|-|nan",
+            "[HEAD]: release_date|album|record_label|uk_albums_chart|us_billboard_c_200_chart|time_order\n---\n[ROW] 1: July 1983|The Alarm (EP)|I.R.S. Records|-|126|0\n[ROW] 2: February 1984|Declaration|I.R.S. Records|6|50|1\n[ROW] 3: October 1985|Strength|I.R.S. Records|18|39|2\n[ROW] 4: November 1987|Eye of the Hurricane|I.R.S. Records|23|77|3\n[ROW] 5: November 1988|Electric Folklore Live|I.R.S. Records|62|167|4\n[ROW] 6: 1988|Compact Hits|A&M Records|-|-|5\n[ROW] 7: September 1989|Change ¥|I.R.S. Records|13|75|6\n[ROW] 8: November 1990|Standards|I.R.S. Records|47|177|7\n...\n[ROW] 44: April 2010|Direct Action °|21st Century|-|-|43\n[ROW] 45: March 2013|Vinyl (2012 film) Soundtrack °|-|-|nan|44",
+        "[HEAD]: time_order\n---\n[ROW] 1: 8",
+        "[HEAD]: album\n---\n[ROW] 1: Eponymous 1981-1983 ¢"
+        
+        ],
+        "responses": [
+           "Python: ```DF['time_order'] = DF.index\n```.",
+           "SQL: ```SELECT time_order FROM DF WHERE album LIKE \"Raw%\" LIMIT 1;```.",
+           "SQL: ```SELECT album FROM DF WHERE time_order=9;```.",
+           "Answer: ```Eponymous 1981-1983 ¢```."
+        ]
+    },
+
+    {
+        "utterance": "the least number of passengers came from which city",
+        "tables": [
+            "[HEAD]: rank|city|passengers|ranking|airline\n---\n[ROW] 1: 1|United States, Los Angeles|14,749|nan|Alaska Airlines\n[ROW] 2: 2|United States, Houston|5,465|nan|United Express\n[ROW] 3: 3|Canada, Calgary|3,761|nan|Air Transat, WestJet\n[ROW] 4: 4|Canada, Saskatoon|2,282|4.0|nan\n[ROW] 5: 5|Canada, Vancouver|2,103|nan|Air Transat\n[ROW] 6: 6|United States, Phoenix|1,829|1.0|US Airways\n[ROW] 7: 7|Canada, Toronto|1,202|1.0|Air Transat, CanJet\n[ROW] 8: 8|Canada, Edmonton|110|nan|nan\n[ROW] 9: 9|United States, Oakland|107|nan|nan",
+            "[HEAD]: rank|city|passengers|ranking|airline|passengers_num\n---\n[ROW] 1: 1|United States, Los Angeles|14,749|nan|Alaska Airlines|14749\n[ROW] 2: 2|United States, Houston|5,465|nan|United Express|5465\n[ROW] 3: 3|Canada, Calgary|3,761|nan|Air Transat, WestJet|3761\n[ROW] 4: 4|Canada, Saskatoon|2,282|4.0|nan|2282\n[ROW] 5: 5|Canada, Vancouver|2,103|nan|Air Transat|2103\n[ROW] 6: 6|United States, Phoenix|1,829|1.0|US Airways|1829\n[ROW] 7: 7|Canada, Toronto|1,202|1.0|Air Transat, CanJet|1202\n[ROW] 8: 8|Canada, Edmonton|110|nan|nan|110\n[ROW] 9: 9|United States, Oakland|107|nan|nan|107",
+            "[HEAD]: city\n---\n[ROW] 1: United States, Oakland"
+        ],
+        "responses": [
+           "Python: ```def get_value(x):\n    return int(x.replace(',', ''))\nDF['passengers_num'] = DF.apply(lambda x: get_value(x['passengers']), axis=1)\n```.",
+           "SQL: ```SELECT city FROM DF ORDER BY passengers_num ASC LIMIT 1;```.",
+            "Answer: ```United States, Oakland```."
+        ]
+    },
+
+    {
+        "utterance":  "what is the works number of the only item built in 1882?",
+        "tables": [
+            "[HEAD]: year_built|works_number|wheel_arr|gauge|original_owner|name|current_location|notes\n---\n[ROW] 1: 1882|283|0-4-0ST|1 ft 10 3⁄4 in (578 mm)|Penrhyn Quarry|Charles|Penrhyn Castle Railway Museum|nan\n[ROW] 2: 1883|316|0-4-0ST|2 ft (?)|Penrhyn Quarry|Gwynedd|Bressingham Steam Museum|Penrhyn Port Class\n[ROW] 3: 1883|317|0-4-0ST|1 ft 11 1⁄2 in (597 mm)|Penrhyn Quarry|Lilian|Launceston Steam Railway|Penrhyn Port Class\n[ROW] 4: 1885|364|0-4-0ST|22.75|Penrhyn Quarry|Winifred|Bala Lake Railway|Penrhyn Port Class\n[ROW] 5: 1886|409|0-4-0ST|1 ft 11 1⁄2 in (597 mm)|Dinorwic Quarry|Velinheli|Launceston Steam Railway|nan\n[ROW] 6: 1889|493|0-4-0ST|1 ft 11 3⁄4 in (603 mm)|Dinorwic Quarry|Elidir|Llanberis Lake Railway|Previously named “Red Damsel”\n[ROW] 7: 1890|518|2-2-0T|(1000mm)|S.V.T. 8|Tortosa-La Cava1|Tortosa (catalonia, Spain)|nan\n[ROW] 8: 1891|541|0-4-0ST|1 ft 10 3⁄4 in (578 mm)|Dinorwic Quarry|Rough Pup|Narrow Gauge Railway Museum, Tywyn|nan\n...\n[ROW] 43: 1954|3815|2-6-2T|2 ft 6 in (762 mm)|Sierra Leone Government Railway|14|Welshpool and Llanfair Light Railway|nan\n[ROW] 44: 1971|3902|0-4-2ST|2 ft (610 mm)|Trangkil Sugar Mill, Indonesia|Trangkil No.4|Statfold Barn Railway|Converted from 750 mm (2 ft 5 1⁄2 in) gauge. Last steam locomotive to be built by Hunslet, and the last industrial steam locomotive built in Britain.",
+            "[HEAD]: works_number\n---\n[ROW] 1: 283"
+        ],
+        "responses": [
+            "SQL: ```SELECT works_number FROM DF WHERE year_built=1882;```.",
+            "Answer: ```283```"
+           
+        ]
+    },
+
+
+    {
+        "utterance": "how many total points were score over all the seasons?",
+        "tables": [
+            "[HEAD]: season|appearance|interchange|tries|goals|f_g|points\n---\n[ROW] 1: 2000(Bulldogs)|–|1|–|–|–|0\n[ROW] 2: 2001(Bulldogs)|21|3|13|1|1|55\n[ROW] 3: 2002(Bulldogs)|17|–|10|–|2|42\n[ROW] 4: 2003(Bulldogs)|19|–|8|–|2|34\n[ROW] 5: 2004(Bulldogs)|25|1|8|–|2|34\n[ROW] 6: 2005(Bulldogs)|23|–|11|1|3|49\n[ROW] 7: 2006(Roosters)|16|–|–|–|–|0\n[ROW] 8: 2007(Roosters)|19|–|5|–|2|22\n...\n[ROW] 13: 2012(Roosters)|22|–|4|62|–|140\n[ROW] 14: 2013(Tigers)|16|2|1|4|–|12",
+            "[HEAD]: sum(points)\n---\n[ROW] 1: 608"
+        ],
+        "responses": [
+           "SQL: ```SELECT SUM(points) FROM DF;```.",
+            "Answer: ```608```."
+        ]
+    },
+
+    {
+        "utterance": "how many consecutive terms have no usda recommended temperature?",
+        "tables": [
+            "[HEAD]: term_french|description|temperature_range|temperature_range1|usda_recommended\n---\n[ROW] 1: Extra-rare or Blue (bleu)|very red and cold|46–49 °C|115–120 °F|nan\n[ROW] 2: Rare (saignant)|cold red center; soft|52–55 °C|125–130 °F|nan\n[ROW] 3: Medium rare (à point)|warm red center; firmer|55–60 °C|130–140 °F|145 °F\n[ROW] 4: Medium (demi-anglais)|pink and firm|60–65 °C|140–150 °F|160 °F\n[ROW] 5: Medium well (cuit)|small amount of pink in the center|65–69 °C|150–155 °F|nan\n[ROW] 6: Well done (bien cuit)|gray-brown throughout; firm|71–100 °C|160–212 °F|170 °F\n[ROW] 7: Over cooked (trop cuit, carbonisé)|blacken throughout; hard|> 100 °C|> 212 °F|300 °F",
+            "[HEAD]: term_french|description|temperature_range|temperature_range1|usda_recommended|row_index\n---\n[ROW] 1: Extra-rare or Blue (bleu)|very red and cold|46–49 °C|115–120 °F|nan|0\n[ROW] 2: Rare (saignant)|cold red center; soft|52–55 °C|125–130 °F|nan|1\n[ROW] 3: Medium rare (à point)|warm red center; firmer|55–60 °C|130–140 °F|145 °F|2\n[ROW] 4: Medium (demi-anglais)|pink and firm|60–65 °C|140–150 °F|160 °F|3\n[ROW] 5: Medium well (cuit)|small amount of pink in the center|65–69 °C|150–155 °F|nan|4\n[ROW] 6: Well done (bien cuit)|gray-brown throughout; firm|71–100 °C|160–212 °F|170 °F|5\n[ROW] 7: Over cooked (trop cuit, carbonisé)|blacken throughout; hard|> 100 °C|> 212 °F|300 °F|6",
+            "[HEAD]: row_index|term_french\n---\n[ROW] 1: 0|Extra-rare or Blue (bleu)\n[ROW] 2: 1|Rare (saignant)\n[ROW] 3: 4|Medium well (cuit)"
+        ],
+        "responses": [
+           "Python: ```DF['row_index'] = DF.index\n```.",
+            "SQL: ```SELECT row_index, term_french FROM DF WHERE usda_recommended IS NULL;```.",
+            "Answer: ```2```."
+        ]
+    },
+
+    {
+        "utterance": "what is the time difference in seconds between rachel king and sriyani kulawansa?",
+        "tables": [
+            "[HEAD]: rank|heat|name|nationality|time|notes\n---\n[ROW] 1: 1.0|1|Lacena Golding-Clarke|Jamaica|12.74|Q, PB\n[ROW] 2: 2.0|1|Vonette Dixon|Jamaica|12.83|Q, PB\n[ROW] 3: 3.0|2|Diane Allahgreen|England|12.92|Q, PB\n[ROW] 4: 4.0|2|Brigitte Foster|Jamaica|12.98|Q\n[ROW] 5: 5.0|2|Angela Atede|Nigeria|13.01|Q, SB\n[ROW] 6: 6.0|1|Angela Whyte|Canada|13.03|Q, PB\n[ROW] 7: 7.0|1|Julie Pratt|England|13.08|q, PB\n[ROW] 8: 8.0|2|Jacquie Munro|Australia|13.22|q\n...\n[ROW] 16: nan|1|Carole Kaboud Mebam|Cameroon|DNS|nan\n[ROW] 17: nan|1|Olutoyin Augustus|Nigeria|DNS|nan",
+            "[HEAD]: rank|heat|name|nationality|time|notes\n---\n[ROW] 1: 9.0|2|Sriyani Kulawansa|Sri Lanka|13.29|None\n[ROW] 2: 12.0|2|Rachel King|Wales|13.58|None"
+        ],
+        "responses": [
+           "SQL: ```SELECT * FROM DF WHERE name=\"Rachel King\" OR name=\"Sriyani Kulawansa\";```.",
+            "Answer: ```0.29```."
+        ]
+    },
+
+    {
+        "utterance": "what is phil lockyer's party?",
+        "tables": [
+            "[HEAD]: name|party|province|term_expires|years_in_office\n---\n[ROW] 1: William Atkinson|Liberal|Central|1989|1983–1984\n[ROW] 2: Colin Bell|Liberal|Lower West|1989|1983–1989\n[ROW] 3: Joe Berinson|Labor|North Central Metropolitan|1986|1980–1993\n[ROW] 4: James Brown|Labor|South-East|1986|1980–1992\n[ROW] 5: Eric Charlton|National/NP|Central|1989|1984–1998\n[ROW] 6: Des Dans|Labor|South Metropolitan|1989|1971–1989\n[ROW] 7: Peter Dowding|Labor|North|1986|1980–1986\n[ROW] 8: Graham Edwards|Labor|North Metropolitan|1989|1983–1997\n...\n[ROW] 34: Richard Williams|Liberal|Metropolitan|1989|1971–1989\n[ROW] 35: David Wordsworth|Liberal|South|1989|1971–1993",
+            "[HEAD]: party\n---\n[ROW] 1: Liberal"
+        ],
+        "responses": [
+           "SQL: ```SELECT party FROM DF WHERE name=\"Phil Lockyer\";```.",
+           "Answer: ```Liberal```."
+        ]
+    },
+
+    {
+        "utterance": "how many nominated results are shown?",
+        "tables": [
+            "[HEAD]: year|award|category|film|result\n---\n[ROW] 1: 2009|Anandalok Awards|Anandalok Awards for Best Actor|Challenge|Won\n[ROW] 2: 2009|Anandalok Awards|Anandalok Awards for Best Action Hero|Challenge|Won\n[ROW] 3: 2010|Star Jalsha Entertainment Awards 2010|Star Jalsha Entertainment Awards 2010 for Best Actor|Poran Jaye Jolia Re|Won\n[ROW] 4: 2010|Star Jalsha Entertainment Awards 2010|Star Jalsha Entertainment Awards 2010 for Best Actor|Dujone|Nominated\n[ROW] 5: 2010|Tele Cine Awards 2010|Tele Cine Awards 2010 for Best Actor|Challenge|Won\n[ROW] 6: 2010|Kalakar Awards 2010|Kalakar Awards 2010 for Best Actor|Challenge|Won\n[ROW] 7: 2010|Star Ananda Shera Bangali awards 2010|STAR Ananda Shera notun Protibha Award|nan|Won\n[ROW] 8: 2010|Anandalok Awards 2010|Anandalok Awards 2010 for Best Actor (Male)|Le Chakka|Won\n...\n[ROW] 31: 2014|14th Tele Cine Awards 2014|14th Tele Cine Awards for Best Actor|Chander Pahar|Pending\n[ROW] 32: 2014|14th Tele Cine Awards 2014|14th Tele Cine Awards for Best Jodi (Dev-Koel)|Rangbaaz|Pending",
+            "[HEAD]: year|award|category|film|result\n---\n[ROW] 1: 2010|Star Jalsha Entertainment Awards 2010|Star Jalsha Entertainment Awards 2010 for Best Actor|Dujone|Nominated\n[ROW] 2: 2011|Anandalok Awards|Anandalok Awards for Best Actor|Paglu|Nominated\n[ROW] 3: 2011|Zee Bangla Awards 2011|Zee Bangla Awards 2011 for Best Actor|Le Chakka|Nominated\n[ROW] 4: 2012|Anandalok Awards 2012|Anandalok Awards 2012 for Best Actor (Male)|Paglu 2|Nominated\n[ROW] 5: 2013|13th Tele Cine Awards 2013|13th Tele Cine Awards 2013 for Best Actor|Challenge 2|Nominated\n[ROW] 6: 2014|Tollywood National Award 2014|Best Romantic Hero|Khoka 420|Nominated",
+            "[HEAD]: count(*)\n---\n[ROW] 1: 6"
+        ],
+        "responses": [
+           "SQL: ```SELECT * FROM DF WHERE result=\"Nominated\";```.",
+            "SQL: ```SELECT COUNT(*) FROM DF;```.",
+            "Answer: ```6```."
+        ]
+    }
+]
+
+

@@ -1,0 +1,7 @@
+{
+    "prompt_template": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". Execute SQL  code step-by-step and finally answer the question. Choose from generating a SQL code or directly answering the question.",
+    "intermediate_prompt_template": {
+        "SQL": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". Execute SQL code step-by-step and finally answer the question. Choose from generating a SQL code or directly answering the question.",
+        "Python": "The database table DF is shown as follows:\n{}\n\nAnswer the following question based on the data above: \"{}\". Execute SQL code step-by-step and finally answer the question. Choose from generating a SQL code or directly answering the question."
+    }
+}

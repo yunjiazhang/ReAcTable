@@ -1,0 +1,44 @@
+[    
+    {
+        "utterance": "which mountain peak has a prominence more than 10,000 ft?",
+        "tables": [ 
+            "[HEAD]: mountain_peak|prominence\n---\n[ROW] 1: Mount Whitney|10,080 ft 3072 m\n[ROW] 2: Mount Williamson|1,677 ft 511 m\n[ROW] 3: White Mountain Peak|7,196 ft 2193 m\n...\n[ROW] 15: Red Slate Mountain|1,736 ft 529 m\n[ROW] 16: Mount Ritter|3,990 ft 1216 m"
+        ],
+        "responses": [ 
+            "Python: ```\ndef get_prominence_ft(s):\n    import re\n    return float(re.search(\"(.*?) ft\", s).group(1))\nDF['prominence_ft'] = DF.apply(lambda x: get_prominence_ft(x['prominence']), axis=1)\n```."
+        ]
+    },
+    
+    {
+        "utterance": "which member served the longest?",
+        "tables": [ 
+            "[HEAD]: member|party|term\n---\n[ROW] 1: John Ryan|None|1859–1864\n[ROW] 2: James Martin|None|1864–1869\n[ROW] 3: James Watson|None|1869–1880\n...\n[ROW] 16: Member|Party|Term\n[ROW] 17: Ian Armstrong|National|1981–2007"
+        ],
+        "responses": [ 
+            "Python: ```\ndef get_duration(s):\n    start = int(s.split('–')[0])\n    end = int(s.split('–')[1])\n    return end - start\nDF['duration'] = DF.apply(lambda x: get_duration(x['term']), axis=1)\n```."
+        ]
+    },
+
+    {
+        "utterance": "the least number of passengers came from which city",
+        "tables": [
+            "[HEAD]: rank|city|passengers|ranking|airline\n---\n[ROW] 1: 1|United States, Los Angeles|14,749|nan|Alaska Airlines\n[ROW] 2: 2|United States, Houston|5,465|nan|United Express\n[ROW] 3: 3|Canada, Calgary|3,761|nan|Air Transat, WestJet\n[ROW] 4: 4|Canada, Saskatoon|2,282|4.0|nan\n[ROW] 5: 5|Canada, Vancouver|2,103|nan|Air Transat\n[ROW] 6: 6|United States, Phoenix|1,829|1.0|US Airways\n[ROW] 7: 7|Canada, Toronto|1,202|1.0|Air Transat, CanJet\n[ROW] 8: 8|Canada, Edmonton|110|nan|nan\n[ROW] 9: 9|United States, Oakland|107|nan|nan"
+        ],
+        "responses": [
+           "Python: ```\ndef get_passengers_num(s):\n    import re\n    return int(re.sub(',', '', s))\nDF['passengers_num'] = DF.apply(lambda x: get_passengers_num(x['passengers']), axis=1)\n```."
+        ]
+    },
+
+    {
+        "utterance": "how many consecutive terms have no usda recommended temperature?",
+        "tables": [
+            "[HEAD]: community|area|location|population|date_established\n---\n[ROW] 1: Beaver Lake 17|49.4 hectares (122 acres)|78.4 km. southeast of Halifax|23|March 3, 1867\n[ROW] 2: Cole Harbour 30|18.6 hectares (46 acres)|9.6 km. east of Halifax|194|March 3, 1880\n[ROW] 3: Millbrook 27|302.0 hectares (746 acres)|8 km. south of Truro|847|March 3, 1886\n...\n[ROW] 6: Truro 27B|16.4 hectares (41 acres)|Joined with 27A on south|0|March 3, 1907\n[ROW] 7: Truro 27C|9.5 hectares (23 acres)|Joined with 27B on south|0|March 3, 1909"
+        ],
+        "responses": [
+           "Python: ```\nimport re\ndef get_acres_num(s):\n    return int(re.search(\"\\((.*?) acres\\)\", s).group(1))\nDF['acres_num'] = DF.apply(lambda x: get_acres_num(x['area']), axis=1)\n```."
+        ]
+    }
+    
+]
+
+
