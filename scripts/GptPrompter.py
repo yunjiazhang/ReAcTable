@@ -251,7 +251,7 @@ class QuestionHandler:
         self.utterance = utterance
         self.source_csv = os.path.join(base_path, source_csv)
         self.target_value = target_value
-        self.API_key = "sk-oMs1jGJzVhRAuypxQRJhZwq6xh6obRMLLPsMY8ZA"
+        self.API_key = openai.api_key
         self._read_data()
         self.execution_acc = None
         self.execution_err = None
