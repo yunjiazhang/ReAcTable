@@ -455,8 +455,8 @@ class CodexAnswerCOTExecutor_template(CodexAnswerCOTExecutor):
                                             stream=False,
                                             # stop='```.'
                                            )
-            
-            original_result = original_output['choices'][0]['text'].strip('\n')
+            # original_result = original_output['choices'][0]['text'].strip('\n')
+            original_result = original_output.choices[0].message.content.strip('\n')
             answer_type = original_result.split(":")[0]
             answer = original_result.split('```')[-1]
             self.original_output.append(original_result)
@@ -505,7 +505,7 @@ class CodexAnswerCOTExecutor_template(CodexAnswerCOTExecutor):
                                             stream=False,
                                             # stop='```.'
                                             )
-                    original_result = original_output['choices'][0]['text'].replace('\n', '')
+                    original_result =  original_output.choices[0].message.content.replace('\n', '')
                     self.predicted_result = original_result
                     break   
                 
@@ -532,7 +532,7 @@ class CodexAnswerCOTExecutor_template(CodexAnswerCOTExecutor):
                                             stream=False,
                                             # stop='```.'
                                             )
-                original_result = original_output['choices'][0]['text'].replace('\n', '')
+                original_result =  original_output.choices[0].message.content.replace('\n', '')
                 self.predicted_result = original_result
                 break
         self.prompt = self.prompts[-1]

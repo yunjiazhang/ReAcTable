@@ -138,4 +138,4 @@ dataset/Table-Fact-Checking/train.csv
 dataset/FeTaQA/results/
 dataset/Table-Fact-Checking/preprocessed_data_program/
 
-
+scripts/

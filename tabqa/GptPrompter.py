@@ -1,6 +1,11 @@
 import re
 import pandas as pd
 import openai
+from openai import OpenAI
+
+
+client = OpenAI(api_key=openai.api_key)
+
 import os
 import json
 # from gpt3_sandbox.api.gpt import GPT
@@ -40,10 +45,10 @@ def table_formater(df, seperator='|', col_data_split='-',
         table_str.append(col_prefix + ': ' + seperator.join(cols))
     else:
         table_str.append(seperator.join(cols))
-        
+
     if col_data_split != '':
         table_str.append(col_data_split * 3)
-        
+
     too_long = False
     if df.shape[0] == 0:
         table_str.append("EMPTY TABLE")
@@ -70,7 +75,7 @@ def shuffleDataFrame(df, n=10):
     all_possible_varients = {}
     new_df = df.copy()
     all_possible_varients['default'] = new_df
-    
+
     cols = df.columns.tolist()
     indices = df.index.tolist()
     while n > 0:
@@ -85,17 +90,17 @@ def shuffleDataFrame(df, n=10):
 def permuteDataFrame(df, utterance=None, ft=None):
     all_possible_varients = {}
     cols = df.columns.tolist() 
-    
+
     # original df
     new_df = df.copy()
     all_possible_varients['original df'] = new_df
-    
+
     # sort by individual columns
     for c in cols:
         new_df = df.copy()
         new_df = new_df.sort_values(c, key=natsort_keygen())
         all_possible_varients[f'sort by {c}'] = new_df
-    
+
     # select a column to sort 
     max_score = -float('inf')
     sort_by_col = cols[0]
@@ -109,7 +114,7 @@ def permuteDataFrame(df, utterance=None, ft=None):
     new_df = df.copy()
     new_df = new_df.sort_values(sort_by_col, key=natsort_keygen())
     all_possible_varients[f'sort by max sim col {sort_by_col}({max_score})'] = new_df
-    
+
     # select a column to sort 
     max_score = -float('inf')
     sort_by_col = cols[0]
@@ -121,13 +126,13 @@ def permuteDataFrame(df, utterance=None, ft=None):
     new_df = df.copy()
     new_df = new_df.sort_values(sort_by_col, key=natsort_keygen())
     all_possible_varients[f'sort by max lcs col {sort_by_col}({max_score})'] = new_df
-    
+
     # col pull to front
     for i in range(len(cols)):
         new_cols = [cols[i]] + cols[0:i] + cols[i+1:]
         new_df = df.copy()[new_cols]
         all_possible_varients[f'column pull front {cols[i]}'] = new_df
-    
+
     # reorder the cols based on the col name overlap
     if utterance is not None:
         utterance = utterance.replace('?', '')
@@ -140,18 +145,18 @@ def permuteDataFrame(df, utterance=None, ft=None):
                 unoccured_cols.append(c)
         new_df = df.copy()[occured_cols + unoccured_cols]
         all_possible_varients[f'col reorder based on name overlaps'] = new_df
-    
+
     # reorder the column based on the embedding distance to the utteracne
     if utterance is not None and ft is not None:
         utterance = utterance.replace('?', '')
         utterance_embedding = get_utterance_embedding(utterance, ft)
-        
+
         overlap_counts = []
         for col in cols:
             col_embedding = get_utterance_embedding(col, ft)
             sim = get_embedding_cos_sim(utterance_embedding, col_embedding)
             overlap_counts.append(sim * (-1))
-        
+
         new_cols = [cols[i] for i in np.argsort(overlap_counts).tolist()]
         new_df = df.copy()[new_cols]
         all_possible_varients[f'col reorder based on embedding distance'] = new_df
@@ -170,23 +175,23 @@ def permuteDataFrame(df, utterance=None, ft=None):
         new_df = df.copy()
         new_df = new_df.reindex(np.argsort(overlap_counts))
         all_possible_varients[f'row reorder based on value overlaps'] = new_df
-        
+
     # reorder the rows based on the value embedding distance to the utteracne
     if utterance is not None and ft is not None:
         utterance = utterance.replace('?', '')
         utterance_embedding = get_utterance_embedding(utterance, ft)
-        
+
         overlap_counts = []
         for i in range(df.shape[0]):
             values = ' '.join([str(v) for v in df.iloc[i].tolist()])
             value_embedding = get_utterance_embedding(values, ft)
             sim = get_embedding_cos_sim(utterance_embedding, value_embedding)
             overlap_counts.append(sim * (-1))
-            
+
         new_df = df.copy()
         new_df = new_df.reindex(np.argsort(overlap_counts))
         all_possible_varients[f'row reorder based on embedding distance'] = new_df
-    
+
     # reorder the rows based on the value overlap + reorder columns based on column name overlaps
     if utterance is not None:
         utterance = utterance.replace('?', '')
@@ -200,7 +205,7 @@ def permuteDataFrame(df, utterance=None, ft=None):
             overlap_counts.append(count)
         new_df = df.copy()
         new_df = new_df.reindex(np.argsort(overlap_counts))
-        
+
         occured_cols = []
         unoccured_cols = []
         for c in cols:
@@ -210,7 +215,7 @@ def permuteDataFrame(df, utterance=None, ft=None):
                 unoccured_cols.append(c)
         new_df = new_df[occured_cols + unoccured_cols]
         all_possible_varients[f'row reorder based on value overlaps and col reorder based on name overlaps'] = new_df
-        
+
     return all_possible_varients
 
 def normalize_col_name(col_name, illegal_chars={'.': '', ' ':'_', 
@@ -258,7 +263,7 @@ class QuestionHandler:
         self.predicted_result = None
         self.original_output = None
         self.prompt = None
-        
+
     def _read_data(self, ):
         self.source_table_df = pd.read_csv(self.source_csv, on_bad_lines='skip')
         # # print("Handler: ", self.source_table_df)
@@ -267,7 +272,7 @@ class QuestionHandler:
         self.data_examples = ''
         for i in range(min(100, self.source_table_df.shape[0])):
             self.data_examples += '\t'.join([str(i) for i in self.source_table_df.iloc[i].tolist()]) + '\n'
-    
+
     def _log_dict(self):
         return {
             'id': self.qid,
@@ -286,14 +291,14 @@ class QuestionHandler:
         }
 
 class CodexSQL(QuestionHandler):
-    
+
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)
         self.demo_file = demo_file
         self.training_demo_ids = []
         self.frequency_penalty = 0.3
         self.model = "davinci-codex-002-msft"
-    
+
     def _gen_codex_prompt(self, schema=True, demo_num=None, at_index=None):
         promp_template = """A database table "df" is shown as follows:
 {}
@@ -301,25 +306,24 @@ class CodexSQL(QuestionHandler):
 Answer the following question with SQL based on the data above: "{}"
 
 Therefore, the semantically and syntactically correct SQL query that answers the question is: ```"""
-        
+
         ##############################################################
         # data_table = '\t'.join(self.source_schema) + '\n' + self.data_examples
         ##############################################################
         data_table = table_formater(self.source_table_df)
-        
+
         self.prompt = promp_template.format(data_table, self.utterance)
         if self.demo_file:
             self.few_shot_demo = read_few_shot_demo(self.demo_file, demo_num=demo_num, at_index=at_index)
             self.prompt = self.few_shot_demo + '\n\n' + self.prompt
-            
-    
+
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
             # gpt = GPT(engine="davinci-codex-002-msft", # code-davinci-002  text-davinci-003
             #       temperature=0,
             #       max_tokens=1024,)
-            self.original_output = openai.Completion.create(engine=self.model,
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=1024,
                                             temperature=0,
@@ -328,7 +332,7 @@ Therefore, the semantically and syntactically correct SQL query that answers the
                                             n=1,
                                             stream=False,
                                             stop='```')
-            
+
             # output = openai.Completion.create(
             #   model="davinci-codex-002-msft",
             #   prompt=self.prompt,
@@ -336,12 +340,12 @@ Therefore, the semantically and syntactically correct SQL query that answers the
             #   temperature=0
             # )
             self.predicted_sql = self.original_output.choices[0].text.split('```')[0]
-            
+
         except Exception as e:
             self.gpt_error = str(e)
             self.predicted_sql = None
             self.original_output = None
-            
+
     def _evaluate_result(self, verbose=False):
         df = self.source_table_df
         # self.reformat_sql = self.predicted_sql.split('FROM')[0] + 'FROM df\nWHERE' + self.predicted_sql.split('WHERE')[-1]
@@ -365,14 +369,14 @@ Therefore, the semantically and syntactically correct SQL query that answers the
                 # print(f"Expected results: {self.target_value}")
                 # print(f"Execution math: {self.execution_acc}")
                 # print('===============================================')
-                
+
         except Exception as e:
             self.execution_acc = False
             self.execution_err = str(e)     
             # if verbose:
                 # print(f"Exception encoutered: {e}")
-            
-    
+
+
 class GptAnswer(QuestionHandler):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', \
                  demo_file=None, table_format=None, \
@@ -396,7 +400,7 @@ Answer the following question based on the data above: "{}". The answer is: ```"
         self.table_format = table_format
         self.majority_vote = majority_vote
         assert self.majority_vote <= 0 or self.temperature > 0, 'If use majority_vote, please also specify a postive temperature.'
-    
+
     def _gen_NN_demo(self, training_example_reasonings, training_embeddings, ft, demo_num=3):
         NNs_from_train = get_NN_demo(self.utterance, training_embeddings, ft, top_n=demo_num)
         for i in NNs_from_train:
@@ -415,9 +419,9 @@ Answer the following question based on the data above: "{}". The answer is: ```"
             demo += training_example_reasonings[i]['targetValue'] + '```.'
             self.demos.append(demo)
         self.training_demo_ids = NNs_from_train
-            
+
     def _gen_gpt_prompt(self, schema=True, demo_num=None, at_index=None):
-        
+
         ##############################################################
         # data_table = '\t'.join(self.source_schema) + '\n' + self.data_examples
         ##############################################################
@@ -431,19 +435,18 @@ Answer the following question based on the data above: "{}". The answer is: ```"
                                           )
         else:
             data_table = table_formater(self.source_table_df)
-            
+
         self.prompt = self.prompt_template.format(data_table, self.utterance)
         if len(self.demos) > 0:
             self.prompt = '\n\n'.join(self.demos) + '\n\n' + self.prompt
         elif self.demo_file:
             self.few_shot_demo = read_few_shot_demo(self.demo_file, demo_num=demo_num, at_index=at_index)
             self.prompt = self.few_shot_demo + '\n\n' + self.prompt
-    
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
-        
+
         try:
-            self.original_output = openai.Completion.create(engine=self.model,
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=128,
                                             temperature=self.temperature,
@@ -452,22 +455,22 @@ Answer the following question based on the data above: "{}". The answer is: ```"
                                             n=1,
                                             stream=False,
                                             stop='```')
-            
-            self.predicted_result = self.original_output['choices'][0]['text'].replace('\n', '').strip(' ')
-            
+
+            self.predicted_result = self.original_output.choices[0].text.replace('\n', '').strip(' ')
+
         except Exception as e:
             self.gpt_error = str(e)
             self.predicted_result = None
             # # print(self.qid, e)
-    
+
     def _evaluate_result(self, verbose=False):
         if self.target_value.lower().strip(' ') in self.predicted_result.lower().strip(' '):
             self.execution_acc = True
         else:
             self.execution_acc = False
         return self.execution_acc 
-    
-    
+
+
     def _log_dict(self):
         return {
             'id': self.qid,
@@ -485,7 +488,7 @@ Answer the following question based on the data above: "{}". The answer is: ```"
             'gpt_original_output': self.original_output, 
             'training_demo_ids': self.training_demo_ids
         }
-            
+
 class CodexAnswer(GptAnswer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)
@@ -495,29 +498,29 @@ class CodexAnswerNLTable(GptAnswer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)    
         self.model = 'davinci-codex-002-msft'
-        
+
     def _set_table_nl_desc(self, table_nl_desc_train, table_nl_desc_test):
         self.table_nl_desc_train = table_nl_desc_train
         self.table_nl_desc_test = table_nl_desc_test
-    
+
     def _gen_NN_demo(self, training_example_reasonings, training_embeddings, ft, demo_num=3):
         NNs_from_train = get_NN_demo(self.utterance, training_embeddings, ft, top_n=demo_num)
         for i in NNs_from_train:
             df = pd.read_csv(os.path.join(self.base_path, training_example_reasonings[i]['context']), on_bad_lines='skip')
-            
+
             df, utterance = df, training_example_reasonings[i]['utterance']
             target_value = training_example_reasonings[i]['targetValue']
-            
+
             # table_str = table_formater(df, utterance=utterance)
             table_str = self.table_nl_desc_train[i]['nl_text']
             if table_str is None:
                 table_str = table_formater(df, utterance=utterance)
-            
+
             demo = self.prompt_template.format(table_str, utterance)
             demo += target_value + '```.'
             self.demos.append(demo)
         self.training_demo_ids = NNs_from_train   
-        
+
     def _gen_gpt_prompt(self, schema=True, demo_num=None, at_index=None):
         df, utterance, self.token_dict = tokenizeDFWithColNames(
             self.source_table_df, 
@@ -530,11 +533,10 @@ class CodexAnswerNLTable(GptAnswer):
         self.prompt = self.prompt_template.format(data_table, utterance)
         if len(self.demos) > 0:
             self.prompt = '\n\n'.join(self.demos) + '\n\n' + self.prompt
-    
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
-            self.original_output = openai.Completion.create(engine=self.model,
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=128,
                                             temperature=0,
@@ -543,8 +545,8 @@ class CodexAnswerNLTable(GptAnswer):
                                             n=1,
                                             stream=False,
                                             stop='```')
-            
-            self.predicted_result = self.original_output['choices'][0]['text'].replace('\n', '').strip(' ')
+
+            self.predicted_result = self.original_output.choices[0].text.replace('\n', '').strip(' ')
             self.predicted_result = parseTokenizedStr(self.predicted_result, self.token_dict, False)
         except Exception as e:
             self.gpt_error = str(e)
@@ -554,24 +556,24 @@ class CodexAnswerTokenizeDF(CodexAnswer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)
         self.model = 'davinci-codex-002-msft'
-        
+
     def _gen_NN_demo(self, training_example_reasonings, training_embeddings, ft, demo_num=3):
         NNs_from_train = get_NN_demo(self.utterance, training_embeddings, ft, top_n=demo_num)
         for i in NNs_from_train:
             df = pd.read_csv(os.path.join(self.base_path, training_example_reasonings[i]['context']), on_bad_lines='skip')
-            
+
             df, utterance, token_dict = tokenizeDFWithColNames(df, training_example_reasonings[i]['utterance'])
             target_value = parseTokenizedStr(str(training_example_reasonings[i]['targetValue']), token_dict, True)
-            
+
             # df, utterance = df, training_example_reasonings[i]['utterance']
             # target_value = training_example_reasonings[i]['targetValue']
-            
+
             table_str = table_formater(df, utterance=utterance)
             demo = self.prompt_template.format(table_str, utterance)
             demo += target_value + '```.'
             self.demos.append(demo)
         self.training_demo_ids = NNs_from_train   
-        
+
     def _gen_gpt_prompt(self, schema=True, demo_num=None, at_index=None):
         df, utterance, self.token_dict = tokenizeDFWithColNames(
             self.source_table_df, 
@@ -581,11 +583,10 @@ class CodexAnswerTokenizeDF(CodexAnswer):
         self.prompt = self.prompt_template.format(data_table, utterance)
         if len(self.demos) > 0:
             self.prompt = '\n\n'.join(self.demos) + '\n\n' + self.prompt
-    
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
-            self.original_output = openai.Completion.create(engine=self.model,
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=128,
                                             temperature=0,
@@ -594,14 +595,14 @@ class CodexAnswerTokenizeDF(CodexAnswer):
                                             n=1,
                                             stream=False,
                                             stop='```')
-            
-            self.predicted_result = self.original_output['choices'][0]['text'].replace('\n', '').strip(' ')
+
+            self.predicted_result = self.original_output.choices[0].text.replace('\n', '').strip(' ')
             self.predicted_result = parseTokenizedStr(self.predicted_result, self.token_dict, False)
         except Exception as e:
             self.gpt_error = str(e)
             self.predicted_result = None
-    
-        
+
+
 # use the frequence penalty
 class GptAnswerReason(GptAnswer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
@@ -609,7 +610,7 @@ class GptAnswerReason(GptAnswer):
         self.demo_file = demo_file
         self.model = 'text-davinci-002'
         self.frequency_penalty = 0.7
-        
+
     def _read_data(self, ):
         self.source_table_df = pd.read_csv(self.source_csv, on_bad_lines='skip')
         self.source_schema = [normalize_col_name(c) for c in list(self.source_table_df.columns)]
@@ -617,7 +618,7 @@ class GptAnswerReason(GptAnswer):
         self.data_examples = ''
         for i in range(min(100, self.source_table_df.shape[0])):
             self.data_examples += '\t'.join([str(i) for i in self.source_table_df.iloc[i].tolist()]) + '\n'
-    
+
     def _gen_gpt_prompt(self, schema=True, demo_num=3):
         promp_template = """{}
 
@@ -635,15 +636,14 @@ Reasoning steps:
         ##############################################################
         data_table = table_formater(self.source_table_df)
         self.prompt = promp_template.format(self.few_shot_demo, data_table, self.utterance)
-    
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
             # gpt = GPT(engine= self.model, # code-davinci-002  text-davinci-003 "davinci-code-002-msft"
             #       temperature=0,
             #        max_tokens=1024)
             # self.original_output = gpt.submit_request(self.prompt, frequency_penalty=self.frequency_penalty)
-            self.original_output = openai.Completion.create(engine=self.model,
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=128,
                                             temperature=0,
@@ -652,8 +652,8 @@ Reasoning steps:
                                             n=1,
                                             stream=False,
                                             stop='```.')
-            
-            self.original_result = self.original_output['choices'][0]['text']
+
+            self.original_result = self.original_output.choices[0].text
             if "```" in self.original_result:
                 self.predicted_result = self.original_result.split('```')[1].split('```')[0]
             else:
@@ -667,7 +667,7 @@ class CodexAnswerReason(GptAnswerReason):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path, demo_file)
         self.model = 'davinci-codex-002-msft'
-            
+
 
 class CodexSQLReason(CodexSQL):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
@@ -675,7 +675,7 @@ class CodexSQLReason(CodexSQL):
         self.demo_file = demo_file
         self.model = 'davinci-codex-002-msft'
         self.frequency_penalty = 0.3
-        
+
     # def _read_data(self, ):
     #     self.source_table_df = pd.read_csv(self.source_csv, on_bad_lines='skip')
     #     self.source_schema = [normalize_col_name(c) for c in list(self.source_table_df.columns)]
@@ -683,10 +683,10 @@ class CodexSQLReason(CodexSQL):
     #     self.data_examples = ''
     #     for i in range(min(100, self.source_table_df.shape[0])):
     #         self.data_examples += '\t'.join([str(i) for i in self.source_table_df.iloc[i].tolist()]) + '\n'
-    
+
     def _gen_gpt_prompt(self, schema=True, demo_num=3):
         promp_template = """{}
- 
+
 A database table is shown as follows:
 {}
 
@@ -699,16 +699,15 @@ Therefore, the semantically and syntactically correct SQL query that answers the
         ##############################################################
         data_table = table_formater(self.source_table_df)
         self.prompt = promp_template.format(self.few_shot_demo, data_table, self.utterance)
-    
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
             # gpt = GPT(engine= self.model,
             #       temperature=0,
             #        max_tokens=1024)
             # self.original_output = gpt.submit_request(self.prompt, stop='```', frequency_penalty=self.frequency_penalty)
-            
-            self.original_output = openai.Completion.create(engine=self.model,
+
+            self.original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=1024,
                                             temperature=0,
@@ -717,8 +716,8 @@ Therefore, the semantically and syntactically correct SQL query that answers the
                                             n=1,
                                             stream=False,
                                             stop='```')
-            
-            self.original_result = self.original_output['choices'][0]['text']
+
+            self.original_result = self.original_output.choices[0].text
             if "SELECT" in self.original_result:
                 self.predicted_sql = self.original_result.replace('\n', ' ')
             else:
@@ -730,7 +729,7 @@ Therefore, the semantically and syntactically correct SQL query that answers the
             self.predicted_sql = None
             self.predicted_result = None
             # print(self.qid, e)
-            
+
 class CodexAnswerOrderExplorer(CodexAnswer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)
@@ -738,10 +737,10 @@ class CodexAnswerOrderExplorer(CodexAnswer):
         self.execution_acc = False
         self.predicted_result = None
         self.prompts = {}
-    
+
     def _gen_all_table_permutations(self, ft=None):
         self.dataframe_permutations = permuteDataFrame(self.source_table_df, self.utterance, ft)
-    
+
     def _gen_NN_demo(self, training_example_reasonings, training_embeddings, ft, demo_num=3):
         NNs_from_train = get_NN_demo(self.utterance, training_embeddings, ft, top_n=demo_num)
         for i in NNs_from_train:
@@ -760,9 +759,9 @@ class CodexAnswerOrderExplorer(CodexAnswer):
             demo += training_example_reasonings[i]['targetValue'] + '```.'
             self.demos.append(demo)
         self.training_demo_ids = NNs_from_train
-    
+
     def _gen_gpt_prompt(self, schema=True, demo_num=None, at_index=None):
-        
+
         ##############################################################
         # data_table = '\t'.join(self.source_schema) + '\n' + self.data_examples
         ##############################################################
@@ -770,12 +769,11 @@ class CodexAnswerOrderExplorer(CodexAnswer):
         self.prompt = self.prompt_template.format(data_table, self.utterance)
         if len(self.demos) > 0:
             self.prompt = '\n\n'.join(self.demos) + '\n\n' + self.prompt
-    
+
     def _get_gpt_prediction(self, permutation_method):
-        openai.api_key = API_key
         try:
             self.prompts[permutation_method] = self.prompt
-            original_output = openai.Completion.create(engine=self.model,
+            original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=128,
                                             temperature=0,
@@ -784,18 +782,18 @@ class CodexAnswerOrderExplorer(CodexAnswer):
                                             n=1,
                                             stream=False,
                                             stop='```')
-            prediction = original_output['choices'][0]['text'].replace('\n', '').strip(' ')
+            prediction = original_output.choices[0].text.replace('\n', '').strip(' ')
             if '=' in prediction:
                 prediction = prediction.split('=')[-1]
             if ':' in prediction:
                 prediction = prediction.split(':')[-1]
-                
+
             self.all_gpt_predicted_results[permutation_method] = prediction.strip(' ')
             self.predicted_result = self.all_gpt_predicted_results[permutation_method]
         except Exception as e:
             self.gpt_error = str(e)
             self.predicted_result = None
-            
+
     def _explore_all_dataframe_permutations(self,):
         for permutation_method in self.dataframe_permutations:
             self.source_table_df = self.dataframe_permutations[permutation_method]
@@ -803,8 +801,8 @@ class CodexAnswerOrderExplorer(CodexAnswer):
             self._get_gpt_prediction(permutation_method)
             if self.gpt_error is not None:
                 break
-    
-    
+
+
     def _log_dict(self):
         return {
             'id': self.qid,
@@ -823,7 +821,7 @@ class CodexAnswerOrderExplorer(CodexAnswer):
             'all_df_permutation_results': self.all_gpt_predicted_results
         }
 
-    
+
 class CodexAnswerRandShuffle(CodexAnswerOrderExplorer):
     def __init__(self, qid, utterance, source_csv, target_value, base_path='./', demo_file=None):
         super().__init__(qid, utterance, source_csv, target_value, base_path)
@@ -831,8 +829,8 @@ class CodexAnswerRandShuffle(CodexAnswerOrderExplorer):
         self.execution_acc = False
         self.predicted_result = None
         self.prompts = {}
-        
+
     def _gen_all_table_permutations(self, ft=None):
         self.dataframe_permutations = shuffleDataFrame(self.source_table_df, n=10)
-        
-        
+
+

@@ -1,5 +1,7 @@
 import os
+from openai import OpenAI
 import openai
+client = OpenAI(api_key=openai.api_key)
 import multiprocessing
 import time
 import pprint
@@ -17,12 +19,12 @@ def visualize_messages(messages, show=True):
 
 def prompt2messages(prompt):
     # print(prompt + '\n====================================')
-    
+
     def is_gpt_respones(s):
         return s.startswith("SQL:") \
             or s.startswith("Python:")\
             or s.startswith("Answer:") 
-    
+
     user_role = 'user'
     gpt_role = 'assistant'
     messages = [
@@ -33,7 +35,7 @@ def prompt2messages(prompt):
     ]
     lines = prompt.split('\n')
     is_gpt_response = False
-    
+
     for line in lines:
         if is_gpt_response:
             if '```' not in line:
@@ -56,7 +58,7 @@ def prompt2messages(prompt):
             )
             if line.count("```") == 1:
                 is_gpt_response = True
-                
+
             else:
                 is_gpt_response = False
                 messages.append(
@@ -90,7 +92,7 @@ def is_chat_model(model):
         return True
     else:
         return False
-    
+
 def GptCompletion(
     engine, 
     prompt, 
@@ -106,28 +108,26 @@ def GptCompletion(
     frequency_penalty=0,
     best_of=1,
     debug=False,
-    prompt_end='\n\n'
+    prompt_end='\n\n',
+    max_retry=1,
 ):
-    # if debug:
-    #     print("===================================\n\"", prompt, '\"')
-    #     print("===================================\n")
-        
     def gpt(queue):
         try:
             if not is_chat_model(engine):
                 current_prompt = prompt.strip(' ')
-                
+
                 while prompt_end is not None \
                         and not current_prompt.endswith(prompt_end) \
                         and not current_prompt.endswith("```") \
                         and not current_prompt.endswith(":"):
                     current_prompt += prompt_end[0]
-                
+
                 if debug:
                     print("===================================\n\"" + current_prompt + '\"')
                     print("===================================\n")
-                
-                output = openai.Completion.create(    
+
+                from openai import OpenAI
+                output = client.chat.completions.create(    
                     engine = engine, 
                     prompt = current_prompt, 
                     suffix=suffix, 
@@ -145,8 +145,8 @@ def GptCompletion(
             else:
                 messages = prompt2messages(prompt)
                 # pprint.pprint(messages)
-                output = openai.ChatCompletion.create(    
-                    engine = engine, 
+                output = client.chat.completions.create(
+                    model = engine, 
                     messages = messages, 
                     # suffix=suffix, 
                     max_tokens=128, 
@@ -157,66 +157,67 @@ def GptCompletion(
                     # logprobs=logprobs,
                     stop=stop,
                     presence_penalty=presence_penalty,
-                    frequency_penalty=frequency_penalty,
-                    # best_of=best_of,
-                )
-                output['choices'][0]['text'] = output['choices'][0]['message']['content'].strip('```')
-                if 'Answer:' in output['choices'][0]['text'] and 'Answer: ```' not in output['choices'][0]['text']:
-                    output['choices'][0]['text'] = output['choices'][0]['text'].replace('Answer:', 'Answer: ```')
+                    frequency_penalty=frequency_penalty)
+                output.choices[0].text = output.choices[0].message.content.strip('```')
+                if 'Answer:' in output.choices[0].text and 'Answer: ```' not in output.choices[0].text:
+                    output.choices[0].text = output.choices[0].text.replace('Answer:', 'Answer: ```')
                 # print(output)
+                return output
         except Exception as e:
             print("Error: " + str(e))
-            if "rate" in str(e).lower():
-                queue.put("Rate limit")
-            else:
-                queue.put(None)
             return None
-        queue.put(output)
+        #     if "rate" in str(e).lower():
+        #         queue.put("Rate limit")
+        #     else:
+        #         queue.put(None)
+        #     return None
+        # queue.put(output)
+
 
     prompt=prompt.strip(' ')
-    max_retry = 3
-    timeout = 20
     connection_cnt = 0
     while connection_cnt < max_retry:
         connection_cnt += 1
-        q = multiprocessing.Queue()
-        try:
-            p = multiprocessing.Process(target=gpt, args=(q,))
-            p.start()
-            p.join(timeout)
-        except Exception as e:
-            if "Rate" in str(e):
-                time.sleep(10) 
-                continue
-            else:
-                raise e
-        if p.is_alive():
-            p.terminate()
-            if debug:
-                print(f"Function timed out, retrying ({connection_cnt}/{max_retry})...")
-            time.sleep(1) 
-        else:
-            result = q.get()
-            if debug:
-                print(result)
-                print("===================================")
-            if result is None:
-                raise ValueError("Error encountered.")
-            elif result == "Rate limit":
-                print("Rate limit detacted. Retrying after 20sec.")
-                time.sleep(20) 
-                continue
-            else:
-                return result
+        output = gpt(None)
+        return output
+        # q = multiprocessing.Queue()
+        # try:
+        #     p = multiprocessing.Process(target=gpt, args=(q,))
+        #     p.start()
+        #     p.join(timeout)
+        # except Exception as e:
+        #     if "Rate" in str(e):
+        #         time.sleep(10) 
+        #         continue
+        #     else:
+        #         raise e
+        # if p.is_alive():
+        #     p.terminate()
+        #     if debug:
+        #         print(f"Function timed out, retrying ({connection_cnt}/{max_retry})...")
+        #     time.sleep(1) 
+        # else:
+        #     result = q.get()
+        #     if debug:
+        #         print(result)
+        #         print("===================================")
+        #     if result is None:
+        #         raise ValueError("Error encountered.")
+        #     elif result == "Rate limit":
+        #         print("Rate limit detacted. Retrying after 20sec.")
+        #         time.sleep(20) 
+        #         continue
+        #     else:
+        #         return result
+
     # assert False, f"Gpt connection timeout after {max_retry} retry."
     raise ValueError(f"Gpt connection timeout after {max_retry} retry.")
-    
-    
-        
+
+
+
 if __name__ == '__main__':
     import dotenv
     config = dotenv.dotenv_values(".env")
-    openai.api_key = config['OPENAI_API_KEY']
     print("Start prompting")
     prompt ="""The database table DF is shown as follows:
 [HEAD]: name|c_1989|c_1990|c_1991|c_1992|c_1993|c_1994|c_1995|c_1996|c_1997|c_1998|c_1999|c_2000|c_2001|c_2002|c_2003|c_2004|c_2005|c_2006|c_2007|c_2008|c_2009|c_2010|career_sr|career_win_loss

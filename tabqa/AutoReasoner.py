@@ -1,6 +1,8 @@
 import re
 import pandas as pd
+from openai import OpenAI
 import openai
+client = OpenAI(api_key=openai.api_key)
 import os
 import json
 # from gpt3_sandbox.api.gpt import GPT
@@ -12,7 +14,7 @@ from tabqa.GptPrompter import *
 import fasttext.util
 
 class GptReasoner():
-    
+
     def __init__(self, qid, utterance, source_csv_file, target_value, base_path='./dataset/WikiTableQuestions/'):
         self.prompt_template = \
 """
@@ -36,17 +38,16 @@ Here is the step-by-step reasoning:```
         self.target_value = target_value
         self.gpt_error = None
         self.gpt_reasoning = None
-        openai.api_key = API_key
-    
+
     def _generate_reasoning_prompt(self, ):
         self.source_df = pd.read_csv(self.source_csv_file, on_bad_lines='warn')
         table_str = table_formater(self.source_df, seperator='|', col_data_split='-')
         self.prompt = self.prompt_template.format(table_str, self.utterance, self.target_value)
-    
+
     def generate_reasonings(self, ):
         try:
             self._generate_reasoning_prompt()
-            self.gpt_reasoning = openai.Completion.create(engine=self.model,
+            self.gpt_reasoning = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=self.max_tokens,
                                             temperature=self.temperature,
@@ -57,9 +58,9 @@ Here is the step-by-step reasoning:```
         except Exception as e:
             self.gpt_error = str(e)
 
-        
+
 class GptAutoReasoner(QuestionHandler):
-    
+
     def __init__(self, qid, utterance, source_csv_file, target_value, base_path='./dataset/WikiTableQuestions/'):
         super().__init__(qid, utterance, source_csv_file, target_value, base_path)
         self.prompt_template = \
@@ -82,7 +83,7 @@ Reasoning steps: """
         self.source_csv_file = source_csv_file
         self.frequency_penalty = 0.3
         # self.frequency_penalty = 0
-    
+
     def _gen_NN_demo(self, training_example_reasonings, training_embeddings, ft, demo_num=3):
         NNs_from_train = get_NN_demo(self.utterance, training_embeddings, ft, top_n=demo_num)
         for i in NNs_from_train:
@@ -93,19 +94,18 @@ Reasoning steps: """
             demo += ' Therefore, the answer is: ```' + training_example_reasonings[i]['targetValue'] + '```.'
             self.demos.append(demo)
         self.training_demo_ids = NNs_from_train
-    
-    
+
+
     def _gen_gpt_prompt(self, ):
         source_csv = pd.read_csv(os.path.join(self.base_path, self.source_csv_file), on_bad_lines='skip')
         table_str = table_formater(source_csv)
         self.prompt = self.prompt_template.format(table_str, self.utterance)
         if len(self.demos) > 0:
             self.prompt = '\n\n'.join(self.demos) + self.prompt
-        
+
     def _get_gpt_prediction(self, ):
-        openai.api_key = API_key
         try:
-            self.gpt_original_output = openai.Completion.create(engine=self.model,
+            self.gpt_original_output = client.completions.create(engine=self.model,
                                             prompt=self.prompt,
                                             max_tokens=self.max_tokens,
                                             temperature=self.temperature,
@@ -123,14 +123,14 @@ Reasoning steps: """
             self.predicted_result = ''
             self.gpt_original_output = None
             # print(self.qid, e)
-        
+
     def _evaluate_result(self, verbose=False):
         if self.target_value.lower().strip(' ') in self.predicted_result.lower().strip(' '):
             self.execution_acc = True
         else:
             self.execution_acc = False
         return self.execution_acc
-        
+
     def _log_dict(self):
         return {
             'id': self.qid,
@@ -149,7 +149,6 @@ Reasoning steps: """
             'training_demo_ids': self.training_demo_ids
         }
 
-    
-    
-    
-    
+
+
+
