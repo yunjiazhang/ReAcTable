@@ -6,6 +6,6 @@ This is the code repo for VLDB 2024 paper: ***ReAcTable: Enhancing ReAct for Tab
 - Then install the reactable package by running ```pip install -e .```
 
 # Usage example
-For usage example, see the notebook for [WikiTQ](./notebooks/COT-MajorityVote-SQL-WikiTQ.ipynb).
+For usage example, see the notebook for [WikiTQ](./notebooks/ReAcTable-MajorityVote-WikiTQ.ipynb).
 
 
