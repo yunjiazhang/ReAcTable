@@ -1,7 +1,15 @@
+import pandas as pd
+import openai
+import os
+import json
+from tqdm import tqdm
+import dotenv
+
 from dateutil import parser
 from tabqa.GptPrompter import *
 from tabqa.GptCOTPrompter import *
 from collections import Counter
+
 
 def get_token_num(s):
     from transformers import GPT2Tokenizer
@@ -9,8 +17,6 @@ def get_token_num(s):
     tokens = tokenizer.encode(s, add_special_tokens=False)
     num_tokens = len(tokens)
     return num_tokens
-    
-
 
 class CodexAnswerCOTExecutor_HighTemperaturMajorityVote(CodexAnswerCOTExecutor_template):
     def __init__(self, prompt_template_json, qid, utterance, source_csv, target_value, base_path='./', demo_file=None, sep=','):
